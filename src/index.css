@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+/* Mobile touch scrolling optimization */
+* {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Hide all scrollbars but keep functionality */
+* {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* Allow all touch interactions by default */
+body {
+    overscroll-behavior: contain;
+}
+
+/* Ensure smooth scrolling on all devices */
+.scrollable {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
 /* Custom font classes for Chinese calligraphy */
 .font-chinese-serif {
     font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', serif;
@@ -45,6 +71,38 @@
     75% { transform: translateY(-4px) translateX(-2px) rotate(-0.3deg); }
 }
 
+/* Elegant page transition animations */
+@keyframes page-fade-in {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.98) translateY(8px);
+        filter: blur(2px);
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes page-fade-out {
+    0% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0);
+        filter: blur(0);
+    }
+    100% { 
+        opacity: 0; 
+        transform: scale(1.02) translateY(-8px);
+        filter: blur(4px);
+    }
+}
+
+@keyframes shimmer-gradient {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
 .animate-float-gentle {
     animation: float-gentle 6s ease-in-out infinite;
 }
@@ -64,6 +122,18 @@
 .animate-multi-axis-right {
     animation: multi-axis-right 8s ease-in-out infinite;
 }
+
+.animate-page-fade-in {
+    animation: page-fade-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-page-fade-out {
+    animation: page-fade-out 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Removed transition overlay styles that were causing interaction issues */
+
+/* Removed blur transition effects that were causing interaction issues */
 
 :root {
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -92,8 +162,6 @@ a:hover {
 
 body {
     margin: 0;
-    display: flex;
-    place-items: center;
     min-width: 320px;
     min-height: 100vh;
 }

@@ -28,12 +28,12 @@ import {
     DragHandle as DragIcon
 } from '@mui/icons-material'
 
-const RelationshipManager = ({ 
-    relationships, 
-    onAddRelationship, 
-    onUpdateRelationship, 
+const RelationshipManager = ({
+    relationships,
+    onAddRelationship,
+    onUpdateRelationship,
     onDeleteRelationship,
-    onReorderRelationships 
+    onReorderRelationships
 }) => {
     const [addDialogOpen, setAddDialogOpen] = useState(false)
     const [editDialogOpen, setEditDialogOpen] = useState(false)
@@ -152,7 +152,7 @@ const RelationshipManager = ({
 
     return (
         <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', m: 2 }}>
                 <Typography variant="h6">
                     关系标签管理 ({relationships.length} 个标签)
                 </Typography>
@@ -215,36 +215,102 @@ const RelationshipManager = ({
             </Box>
 
             {/* Add Dialog */}
-            <Dialog open={addDialogOpen} onClose={handleCancel} maxWidth="sm" fullWidth>
-                <DialogTitle>添加关系标签</DialogTitle>
-                <DialogContent>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+            <Dialog 
+                open={addDialogOpen} 
+                onClose={handleCancel} 
+                maxWidth="sm" 
+                fullWidth
+                sx={{
+                    '& .MuiDialog-paper': {
+                        borderRadius: '16px',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                        border: 'none'
+                    }
+                }}
+            >
+                <DialogTitle
+                    sx={{
+                        textAlign: 'center',
+                        fontSize: '1.5rem',
+                        fontWeight: 'medium',
+                        color: '#374151',
+                        fontFamily: 'serif',
+                        padding: '24px 32px 16px'
+                    }}
+                >
+                    添加关系标签
+                </DialogTitle>
+                <DialogContent
+                    sx={{
+                        padding: '16px 32px'
+                    }}
+                >
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2 }}>
                         <TextField
                             label="标签值 (唯一标识)"
                             value={formData.value}
                             onChange={(e) => setFormData(prev => ({ ...prev, value: e.target.value }))}
                             fullWidth
                             required
+                            variant="standard"
                             placeholder="例如: groom_college_friend"
                             helperText="用于程序识别，建议使用英文和下划线"
+                            sx={{
+                                '& .MuiInput-underline:before': {
+                                    borderBottomColor: '#E5E7EB',
+                                },
+                                '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                    borderBottomColor: '#9CA3AF',
+                                },
+                                '& .MuiInput-underline:after': {
+                                    borderBottomColor: '#6B7280',
+                                }
+                            }}
                         />
-                        
+
                         <TextField
                             label="显示名称"
                             value={formData.label}
                             onChange={(e) => setFormData(prev => ({ ...prev, label: e.target.value }))}
                             fullWidth
                             required
+                            variant="standard"
                             placeholder="例如: 男方大学同学"
                             helperText="用户看到的标签名称"
+                            sx={{
+                                '& .MuiInput-underline:before': {
+                                    borderBottomColor: '#E5E7EB',
+                                },
+                                '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                    borderBottomColor: '#9CA3AF',
+                                },
+                                '& .MuiInput-underline:after': {
+                                    borderBottomColor: '#6B7280',
+                                }
+                            }}
                         />
 
-                        <FormControl fullWidth>
-                            <InputLabel>分类</InputLabel>
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel sx={{
+                                '&.Mui-focused': {
+                                    color: '#6B7280'
+                                }
+                            }}>分类</InputLabel>
                             <Select
                                 value={formData.category}
                                 label="分类"
                                 onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                                sx={{
+                                    '& .MuiSelect-select:before': {
+                                        borderBottomColor: '#E5E7EB',
+                                    },
+                                    '& .MuiSelect-select:hover:not(.Mui-disabled):before': {
+                                        borderBottomColor: '#9CA3AF',
+                                    },
+                                    '& .MuiSelect-select:after': {
+                                        borderBottomColor: '#6B7280',
+                                    }
+                                }}
                             >
                                 {categoryOptions.map(option => (
                                     <MenuItem key={option.value} value={option.value}>
@@ -255,39 +321,143 @@ const RelationshipManager = ({
                         </FormControl>
                     </Box>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCancel}>取消</Button>
-                    <Button onClick={handleAddSave} variant="contained">添加</Button>
+                <DialogActions
+                    sx={{
+                        padding: '16px 32px 24px',
+                        gap: 2
+                    }}
+                >
+                    <Button 
+                        onClick={handleCancel}
+                        variant="outlined"
+                        sx={{
+                            borderStyle: 'dashed',
+                            borderWidth: '1px',
+                            borderColor: '#9CA3AF',
+                            color: '#6B7280',
+                            borderRadius: '20px',
+                            padding: '8px 24px',
+                            '&:hover': {
+                                borderColor: '#6B7280',
+                                backgroundColor: '#F9FAFB'
+                            }
+                        }}
+                    >
+                        取消
+                    </Button>
+                    <Button 
+                        onClick={handleAddSave} 
+                        variant="outlined"
+                        sx={{
+                            borderStyle: 'dashed',
+                            borderWidth: '1px',
+                            borderColor: '#6B7280',
+                            color: '#374151',
+                            borderRadius: '20px',
+                            padding: '8px 24px',
+                            fontWeight: 'medium',
+                            '&:hover': {
+                                borderColor: '#374151',
+                                backgroundColor: '#F9FAFB'
+                            }
+                        }}
+                    >
+                        添加
+                    </Button>
                 </DialogActions>
             </Dialog>
 
             {/* Edit Dialog */}
-            <Dialog open={editDialogOpen} onClose={handleCancel} maxWidth="sm" fullWidth>
-                <DialogTitle>编辑关系标签</DialogTitle>
-                <DialogContent>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+            <Dialog 
+                open={editDialogOpen} 
+                onClose={handleCancel} 
+                maxWidth="sm" 
+                fullWidth
+                sx={{
+                    '& .MuiDialog-paper': {
+                        borderRadius: '16px',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                        border: 'none'
+                    }
+                }}
+            >
+                <DialogTitle
+                    sx={{
+                        textAlign: 'center',
+                        fontSize: '1.5rem',
+                        fontWeight: 'medium',
+                        color: '#374151',
+                        fontFamily: 'serif',
+                        padding: '24px 32px 16px'
+                    }}
+                >
+                    编辑关系标签
+                </DialogTitle>
+                <DialogContent
+                    sx={{
+                        padding: '16px 32px'
+                    }}
+                >
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pt: 2 }}>
                         <TextField
                             label="标签值"
                             value={formData.value}
                             fullWidth
                             disabled
+                            variant="standard"
                             helperText="标签值不能修改"
+                            sx={{
+                                '& .MuiInput-underline:before': {
+                                    borderBottomColor: '#E5E7EB',
+                                },
+                                '& .MuiInput-underline.Mui-disabled:before': {
+                                    borderBottomColor: '#E5E7EB',
+                                    borderBottomStyle: 'dotted'
+                                }
+                            }}
                         />
-                        
+
                         <TextField
                             label="显示名称"
                             value={formData.label}
                             onChange={(e) => setFormData(prev => ({ ...prev, label: e.target.value }))}
                             fullWidth
                             required
+                            variant="standard"
+                            sx={{
+                                '& .MuiInput-underline:before': {
+                                    borderBottomColor: '#E5E7EB',
+                                },
+                                '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+                                    borderBottomColor: '#9CA3AF',
+                                },
+                                '& .MuiInput-underline:after': {
+                                    borderBottomColor: '#6B7280',
+                                }
+                            }}
                         />
 
-                        <FormControl fullWidth>
-                            <InputLabel>分类</InputLabel>
+                        <FormControl fullWidth variant="standard">
+                            <InputLabel sx={{
+                                '&.Mui-focused': {
+                                    color: '#6B7280'
+                                }
+                            }}>分类</InputLabel>
                             <Select
                                 value={formData.category}
                                 label="分类"
                                 onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                                sx={{
+                                    '& .MuiSelect-select:before': {
+                                        borderBottomColor: '#E5E7EB',
+                                    },
+                                    '& .MuiSelect-select:hover:not(.Mui-disabled):before': {
+                                        borderBottomColor: '#9CA3AF',
+                                    },
+                                    '& .MuiSelect-select:after': {
+                                        borderBottomColor: '#6B7280',
+                                    }
+                                }}
                             >
                                 {categoryOptions.map(option => (
                                     <MenuItem key={option.value} value={option.value}>
@@ -298,9 +468,49 @@ const RelationshipManager = ({
                         </FormControl>
                     </Box>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCancel}>取消</Button>
-                    <Button onClick={handleEditSave} variant="contained">保存</Button>
+                <DialogActions
+                    sx={{
+                        padding: '16px 32px 24px',
+                        gap: 2
+                    }}
+                >
+                    <Button 
+                        onClick={handleCancel}
+                        variant="outlined"
+                        sx={{
+                            borderStyle: 'dashed',
+                            borderWidth: '1px',
+                            borderColor: '#9CA3AF',
+                            color: '#6B7280',
+                            borderRadius: '20px',
+                            padding: '8px 24px',
+                            '&:hover': {
+                                borderColor: '#6B7280',
+                                backgroundColor: '#F9FAFB'
+                            }
+                        }}
+                    >
+                        取消
+                    </Button>
+                    <Button 
+                        onClick={handleEditSave} 
+                        variant="outlined"
+                        sx={{
+                            borderStyle: 'dashed',
+                            borderWidth: '1px',
+                            borderColor: '#6B7280',
+                            color: '#374151',
+                            borderRadius: '20px',
+                            padding: '8px 24px',
+                            fontWeight: 'medium',
+                            '&:hover': {
+                                borderColor: '#374151',
+                                backgroundColor: '#F9FAFB'
+                            }
+                        }}
+                    >
+                        保存
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Box>

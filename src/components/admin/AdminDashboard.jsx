@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react'
 import {
     Box,
-    Paper,
-    Tabs,
-    Tab,
     Typography,
     Button,
     Alert,
     CircularProgress,
-    Container
+    Container,
+    IconButton,
 } from '@mui/material'
 import {
-    People as PeopleIcon,
-    Label as LabelIcon,
     ArrowBack as ArrowBackIcon,
-    Refresh as RefreshIcon
+    Refresh as RefreshIcon,
 } from '@mui/icons-material'
 import { apiClient } from '../../utils/apiClient'
 import GuestDataTable from './GuestDataTable'
@@ -34,13 +30,13 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
     const loadAllData = async () => {
         setLoading(true)
         setError(null)
-        
+
         try {
             const [guestsResponse, relationshipsResponse] = await Promise.all([
                 apiClient.getAllGuests(),
                 apiClient.getAllRelationships()
             ])
-            
+
             setGuests(guestsResponse.data || [])
             setRelationships(relationshipsResponse.data || [])
         } catch (error) {
@@ -60,7 +56,7 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
         try {
             // For updating, we need to delete the old and add the new
             await apiClient.deleteGuest(originalGuest.seatid, originalGuest.tableid)
-            
+
             // Add updated guest data
             const guestData = {
                 name: updatedData.name,
@@ -70,21 +66,21 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
                 notes: updatedData.notes,
                 accommodation: updatedData.accommodation
             }
-            
+
             const seatData = {
                 id: originalGuest.seatid,
                 tableId: originalGuest.tableid,
                 seatNumber: originalGuest.seatnumber
             }
-            
+
             await apiClient.saveGuest(guestData, seatData)
-            
+
             // Refresh data
             await loadAllData()
             if (refreshTableData) {
                 await refreshTableData()
             }
-            
+
         } catch (error) {
             console.error('Failed to update guest:', error)
             alert('更新失败: ' + error.message)
@@ -94,13 +90,13 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
     const handleDeleteGuest = async (guest) => {
         try {
             await apiClient.deleteGuest(guest.seatid, guest.tableid)
-            
+
             // Refresh data
             await loadAllData()
             if (refreshTableData) {
                 await refreshTableData()
             }
-            
+
         } catch (error) {
             console.error('Failed to delete guest:', error)
             alert('删除失败: ' + error.message)
@@ -158,52 +154,101 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
     }
 
     return (
-        <Container maxWidth="xl" sx={{ py: 3 }}>
-            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Button
-                        variant="outlined"
-                        startIcon={<ArrowBackIcon />}
-                        onClick={onBack}
-                    >
-                        返回座位选择
-                    </Button>
-                    <Typography variant="h4" component="h1">
-                        超级管理员面板
-                    </Typography>
-                </Box>
-                <Button
-                    variant="outlined"
-                    startIcon={<RefreshIcon />}
-                    onClick={loadAllData}
-                >
-                    刷新数据
-                </Button>
-            </Box>
+        <div className="h-screen bg-white flex flex-col">
+            {/* Fixed Header */}
+            <div className="flex-shrink-0 p-3 sm:p-4 bg-white border-b-2 border-dashed border-gray-200">
+                <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex flex-row sm:items-center gap-3">
+                        <IconButton
+                            onClick={onBack}
+                            sx={{
+                                backgroundColor: 'white',
+                                borderColor: '#9CA3AF',
+                                border: '2px solid',
+                                borderRadius: '50%',
+                                color: '#374151',
+                                width: 32,
+                                height: 32,
+                                '&:hover': {
+                                    backgroundColor: '#F9FAFB',
+                                    borderColor: '#6B7280',
+                                }
+                            }}
+                        >
+                            <ArrowBackIcon fontSize="small" />
+                        </IconButton>
+                        <Typography
+                            variant="h5"
+                            component="h1"
+                            className="text-gray-800 font-medium text-lg sm:text-xl"
+                        >
+                            管理员面板
+                        </Typography>
+                    </div>
+                </div>
 
-            {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {error}
-                </Alert>
-            )}
+                {error && (
+                    <div className="mb-4 p-3 bg-red-50 border-2 border-dashed border-red-300 rounded-lg">
+                        <Typography className="text-red-700 text-sm">
+                            {error}
+                        </Typography>
+                    </div>
+                )}
 
-            <Paper sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={activeTab} onChange={handleTabChange}>
-                        <Tab 
-                            icon={<PeopleIcon />} 
-                            label={`宾客数据管理 (${guests.length})`}
-                            iconPosition="start"
-                        />
-                        <Tab 
-                            icon={<LabelIcon />} 
-                            label={`关系标签管理 (${relationships.length})`}
-                            iconPosition="start"
-                        />
-                    </Tabs>
-                </Box>
+                {/* Tab Navigation */}
+                <div className="mb-4">
+                    <div className="flex flex-row gap-2">
+                        <button
+                            onClick={() => setActiveTab(0)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium border-2 border-dashed transition-all duration-200 ${activeTab === 0
+                                ? 'bg-gray-400 border-gray-500 text-gray-800'
+                                : 'bg-white border-gray-300 text-gray-800 hover:border-gray-400 hover:bg-gray-50'
+                                }`}
+                        >
+                            宾客数据 ({guests.length})
+                        </button>
+                        <button
+                            onClick={() => setActiveTab(1)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium border-2 border-dashed transition-all duration-200 ${activeTab === 1
+                                ? 'bg-gray-400 border-gray-500 text-gray-800'
+                                : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50'
+                                }`}
+                        >
+                            关系标签 ({relationships.length})
+                        </button>
+                        <IconButton
+                            onClick={loadAllData}
+                            sx={{
+                                backgroundColor: 'white',
+                                borderColor: '#9CA3AF',
+                                border: '2px solid',
+                                borderRadius: '50%',
+                                color: '#374151',
+                                width: 32,
+                                height: 32,
+                                '&:hover': {
+                                    backgroundColor: '#F9FAFB',
+                                    borderColor: '#6B7280',
+                                }
+                            }}
+                        >
+                            <RefreshIcon fontSize="small" />
+                        </IconButton>
+                    </div>
+                </div>
+            </div>
 
-                <Box sx={{ p: 3 }}>
+            {/* Main Scrollable Content */}
+            <div 
+                className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-4 py-4"
+                style={{
+                    WebkitOverflowScrolling: 'touch',
+                    overscrollBehavior: 'contain',
+                    minHeight: 0
+                }}
+            >
+                
+                <div className="bg-white border-2 border-dashed border-gray-200 rounded-lg">
                     {activeTab === 0 && (
                         <GuestDataTable
                             guests={guests}
@@ -222,18 +267,16 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
                             onReorderRelationships={handleReorderRelationships}
                         />
                     )}
-                </Box>
-            </Paper>
-
-            <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
-                <Typography variant="body2" color="text.secondary">
-                    📊 数据统计: {guests.length} 位宾客，{relationships.length} 个关系标签
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    💾 所有数据实时保存到服务器CSV文件中
-                </Typography>
-            </Box>
-        </Container>
+                </div>
+                
+                {/* Stats at bottom */}
+                <div className="mt-4 p-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg">
+                    <Typography variant="body2" className="text-gray-600 text-sm">
+                        数据统计: {guests.length} 位宾客，{relationships.length} 个关系标签
+                    </Typography>
+                </div>
+            </div>
+        </div>
     )
 }
 

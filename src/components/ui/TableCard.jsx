@@ -1,6 +1,6 @@
 import { IconButton } from '@mui/material'
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
-import SeatAvatar from './SeatAvatar'
+import SeatChair from './SeatChair'
 
 const TableCard = ({
     table,
@@ -17,7 +17,7 @@ const TableCard = ({
     const occupiedCount = table.seats.filter(seat => seat.occupied).length
 
     const renderSeat = (seat) => (
-        <SeatAvatar
+        <SeatChair
             key={seat.id}
             seat={seat}
             isAdminMode={isAdminMode}
@@ -66,15 +66,18 @@ const TableCard = ({
                 {table.seats.slice(6, 10).map(renderSeat)}
             </div>
             
-            {/* Extended seat (13th seat) if exists */}
-            {table.seats.length > 12 && (
-                <div className="flex justify-center mt-1">
-                    <div className="flex items-center gap-1">
-                        <span className="text-xs text-orange-600">+</span>
-                        {renderSeat(table.seats[12])}
+            {/* Extended seats (beyond default capacity) if exist */}
+            {(() => {
+                const defaultSeatsPerTable = parseInt(import.meta.env.VITE_DEFAULT_SEATS_PER_TABLE) || 12
+                return table.seats.length > defaultSeatsPerTable && (
+                    <div className="flex justify-center mt-2">
+                        <div className="flex flex-wrap gap-1 justify-center">
+                            <span className="text-xs text-orange-600 mr-1">+</span>
+                            {table.seats.slice(defaultSeatsPerTable).map(seat => renderSeat(seat))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            })()}
         </div>
     )
 }

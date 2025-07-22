@@ -1,13 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import {
     Table,
     TableBody,
     TableCell,
-    TableContainer,
     TableHead,
     TableRow,
-    Paper,
-    IconButton,
     Button,
     Dialog,
     DialogTitle,
@@ -21,20 +18,16 @@ import {
     Chip,
     Box,
     Typography,
-    TablePagination,
     FormControlLabel,
     Checkbox
 } from '@mui/material'
-import { Edit as EditIcon, Delete as DeleteIcon, Download as DownloadIcon } from '@mui/icons-material'
 
 const GuestDataTable = ({ guests, relationships, onUpdateGuest, onDeleteGuest }) => {
-    const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10)
     const [editDialogOpen, setEditDialogOpen] = useState(false)
     const [editingGuest, setEditingGuest] = useState(null)
     const [editData, setEditData] = useState({})
 
-    const handleEditClick = (guest) => {
+    const handleEditClick = useCallback((guest) => {
         setEditingGuest(guest)
         setEditData({
             name: guest.name || '',
@@ -45,28 +38,28 @@ const GuestDataTable = ({ guests, relationships, onUpdateGuest, onDeleteGuest })
             accommodation: guest.accommodation || false
         })
         setEditDialogOpen(true)
-    }
+    }, [])
 
-    const handleEditSave = () => {
+    const handleEditSave = useCallback(() => {
         if (editingGuest && onUpdateGuest) {
             onUpdateGuest(editingGuest, editData)
         }
         setEditDialogOpen(false)
         setEditingGuest(null)
         setEditData({})
-    }
+    }, [editingGuest, editData, onUpdateGuest])
 
-    const handleEditCancel = () => {
+    const handleEditCancel = useCallback(() => {
         setEditDialogOpen(false)
         setEditingGuest(null)
         setEditData({})
-    }
+    }, [])
 
-    const handleDeleteClick = (guest) => {
+    const handleDeleteClick = useCallback((guest) => {
         if (window.confirm(`确定要删除宾客 ${guest.name} 吗？`)) {
             onDeleteGuest(guest)
         }
-    }
+    }, [onDeleteGuest])
 
     const handleExportCSV = () => {
         if (!guests || guests.length === 0) {
@@ -112,36 +105,44 @@ const GuestDataTable = ({ guests, relationships, onUpdateGuest, onDeleteGuest })
         return accommodation ? 'success' : 'default'
     }
 
-    // Pagination
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage)
-    }
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10))
-        setPage(0)
-    }
-
-    const paginatedGuests = guests.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    // Remove pagination - show all guests
 
     return (
-        <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6">
-                    宾客数据管理 ({guests.length} 位宾客)
-                </Typography>
-                <Button
-                    variant="outlined"
-                    startIcon={<DownloadIcon />}
-                    onClick={handleExportCSV}
-                >
-                    导出CSV
-                </Button>
-            </Box>
+        <div>
+            {/* Header */}
+            <div className="px-3 py-3 border-b-2 border-dashed border-gray-200 bg-white">
+                <div className="flex flex-row justify-between items-center gap-4">
+                    <Typography variant="h6" className="text-gray-800 font-medium text-base">
+                        宾客数据管理 ({guests.length} 位宾客)
+                    </Typography>
+                    <Button
+                        variant="outlined"
+                        onClick={handleExportCSV}
+                        className="w-fit"
+                        sx={{
+                            backgroundColor: 'white',
+                            borderColor: '#9CA3AF',
+                            border: '2px solid',
+                            borderRadius: '9999px',
+                            color: '#374151',
+                            padding: '6px 12px',
+                            fontSize: '12px',
+                            fontWeight: '500',
+                            '&:hover': {
+                                backgroundColor: '#F9FAFB',
+                                borderColor: '#6B7280',
+                            }
+                        }}
+                    >
+                        导出
+                    </Button>
+                </div>
+            </div>
 
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
+            {/* Table - no internal scrolling */}
+            <div className="overflow-x-auto">
+                <Table sx={{ minWidth: 800 }}>
+                    <TableHead className="bg-gray-50">
                         <TableRow>
                             <TableCell>姓名</TableCell>
                             <TableCell>性别</TableCell>
@@ -156,7 +157,7 @@ const GuestDataTable = ({ guests, relationships, onUpdateGuest, onDeleteGuest })
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedGuests.map((guest, index) => (
+                        {guests.map((guest, index) => (
                             <TableRow key={`${guest.tableid}_${guest.seatid}_${index}`}>
                                 <TableCell>
                                     <Typography variant="body2" fontWeight="medium">
@@ -202,32 +203,26 @@ const GuestDataTable = ({ guests, relationships, onUpdateGuest, onDeleteGuest })
                                     </Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                        <IconButton size="small" onClick={() => handleEditClick(guest)}>
-                                            <EditIcon fontSize="small" />
-                                        </IconButton>
-                                        <IconButton size="small" color="error" onClick={() => handleDeleteClick(guest)}>
-                                            <DeleteIcon fontSize="small" />
-                                        </IconButton>
-                                    </Box>
+                                    <div className="flex gap-1">
+                                        <button
+                                            onClick={() => handleEditClick(guest)}
+                                            className="px-2 py-1 text-xs font-medium border border-dashed border-gray-300 rounded-full bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                                        >
+                                            编辑
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteClick(guest)}
+                                            className="px-2 py-1 text-xs font-medium border border-dashed border-red-300 rounded-full bg-white text-red-600 hover:bg-red-50 hover:border-red-400 transition-all duration-200"
+                                        >
+                                            删除
+                                        </button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer>
-
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25, 50]}
-                component="div"
-                count={guests.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage="每页显示:"
-                labelDisplayedRows={({ from, to, count }) => `${from}-${to} / ${count}`}
-            />
+            </div>
 
             {/* Edit Dialog */}
             <Dialog open={editDialogOpen} onClose={handleEditCancel} maxWidth="sm" fullWidth>
@@ -241,7 +236,7 @@ const GuestDataTable = ({ guests, relationships, onUpdateGuest, onDeleteGuest })
                             fullWidth
                             required
                         />
-                        
+
                         <FormControl fullWidth required>
                             <InputLabel>性别</InputLabel>
                             <Select
@@ -302,7 +297,7 @@ const GuestDataTable = ({ guests, relationships, onUpdateGuest, onDeleteGuest })
                     <Button onClick={handleEditSave} variant="contained">保存</Button>
                 </DialogActions>
             </Dialog>
-        </Box>
+        </div>
     )
 }
 

@@ -5,13 +5,14 @@ import path from 'path'
 import csv from 'csv-parser'
 import { createObjectCsvWriter } from 'csv-writer'
 import { fileURLToPath } from 'url'
+import { config } from './config.js'
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = process.env.PORT || 3001
+const PORT = config.PORT
 
 // Middleware
 app.use(cors())
@@ -68,11 +69,11 @@ const initializeTablesFile = () => {
             header: tablesHeaders
         })
         
-        // Create 22 tables structure
+        // Create tables structure based on configuration
         const tables = []
-        for (let i = 1; i <= 22; i++) {
-            const side = i <= 11 ? 'left' : 'right'
-            const displayNumber = side === 'left' ? i : i - 11
+        for (let i = 1; i <= config.TOTAL_TABLES; i++) {
+            const side = i <= config.TABLES_PER_SIDE ? 'left' : 'right'
+            const displayNumber = side === 'left' ? i : i - config.TABLES_PER_SIDE
             
             tables.push({
                 tableid: `table_${i}`,

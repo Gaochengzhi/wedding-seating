@@ -11,21 +11,24 @@ export const maskName = (name) => {
 // Initialize tables data structure
 export const initializeTables = () => {
     const tables = []
+    const defaultSeatsPerTable = parseInt(import.meta.env.VITE_DEFAULT_SEATS_PER_TABLE) || 12
+    const tablesPerSide = parseInt(import.meta.env.VITE_TABLES_PER_SIDE) || 11
+    const totalTables = parseInt(import.meta.env.VITE_TOTAL_TABLES) || 22
 
-    // Create 22 tables (11 on each side)
-    for (let i = 1; i <= 22; i++) {
-        const side = i <= 11 ? 'left' : 'right'
-        const tableNumber = side === 'left' ? i : i - 11
+    // Create tables based on configuration
+    for (let i = 1; i <= totalTables; i++) {
+        const side = i <= tablesPerSide ? 'left' : 'right'
+        const tableNumber = side === 'left' ? i : i - tablesPerSide
 
         tables.push({
             id: `table_${i}`,
             number: i,
             displayNumber: tableNumber,
             side: side,
-            maxCapacity: 12,
-            extendedCapacity: 12,
+            maxCapacity: defaultSeatsPerTable,
+            extendedCapacity: defaultSeatsPerTable,
             currentCount: 0,
-            seats: Array(12).fill(null).map((_, seatIndex) => ({
+            seats: Array(defaultSeatsPerTable).fill(null).map((_, seatIndex) => ({
                 id: `table_${i}_seat_${seatIndex}`,
                 tableId: `table_${i}`,
                 seatNumber: seatIndex + 1,
@@ -53,10 +56,13 @@ export const validateGuestData = (guestData) => {
 
     if (!guestData.phone.trim()) {
         errors.push('请填写电话号码')
-    } else if (!/^\d{11}$/.test(guestData.phone)) {
-        errors.push('请输入正确的11位电话号码')
+    } else {
+        const phoneLength = parseInt(import.meta.env.VITE_PHONE_NUMBER_LENGTH) || 11
+        const phoneRegex = new RegExp(`^\\d{${phoneLength}}$`)
+        if (!phoneRegex.test(guestData.phone)) {
+            errors.push(`请输入正确的${phoneLength}位电话号码`)
+        }
     }
-
     if (!guestData.relationship) {
         errors.push('请选择关系')
     }
@@ -77,15 +83,17 @@ export const mergeTableNotes = (localTables, serverTables) => {
 
 // Create tables structure from server data
 export const createTablesFromServer = (serverTables) => {
+    const seatsPerTable = parseInt(import.meta.env.VITE_DEFAULT_SEATS_PER_TABLE) || 12
+
     const tables = serverTables.map(serverTable => ({
         id: serverTable.tableid,
         number: parseInt(serverTable.tableid.replace('table_', '')),
         displayNumber: parseInt(serverTable.displaynumber),
         side: serverTable.side,
-        maxCapacity: 12,
-        extendedCapacity: 12,
+        maxCapacity: seatsPerTable,
+        extendedCapacity: seatsPerTable,
         currentCount: 0,
-        seats: Array(12).fill(null).map((_, seatIndex) => ({
+        seats: Array(seatsPerTable).fill(null).map((_, seatIndex) => ({
             id: `${serverTable.tableid}_seat_${seatIndex}`,
             tableId: serverTable.tableid,
             seatNumber: seatIndex + 1,
@@ -94,7 +102,7 @@ export const createTablesFromServer = (serverTables) => {
         })),
         notes: serverTable.notes || ''
     }))
-    
+
     // Sort tables by side first, then by display number
     return tables.sort((a, b) => {
         // First sort by side (left first, then right)
@@ -118,17 +126,18 @@ export const processGuestDataFromServer = (guests, tables) => {
     const updatedTables = tables.map(table => {
         // Find all guests for this table
         const tableGuests = validGuests.filter(g => g.tableid === table.id)
-        
-        // Start with the base 12 seats from freshTables
+
+        // Start with the base default seats from freshTables
         let tableSeats = [...table.seats]
-        
-        // Check if we need to add extended seats (seat numbers > 12)
+        const baseSeatsPerTable = parseInt(import.meta.env.VITE_DEFAULT_SEATS_PER_TABLE) || 12
+
+        // Check if we need to add extended seats (seat numbers > baseSeatsPerTable)
         const maxSeatNumber = Math.max(0, ...tableGuests.map(g => parseInt(g.seatnumber) || 0))
-        if (maxSeatNumber > 12) {
+        if (maxSeatNumber > baseSeatsPerTable) {
             // Add extended seats
-            for (let i = 13; i <= maxSeatNumber; i++) {
+            for (let i = baseSeatsPerTable + 1; i <= maxSeatNumber; i++) {
                 tableSeats.push({
-                    id: `${table.id}_seat_${i-1}`,
+                    id: `${table.id}_seat_${i - 1}`,
                     tableId: table.id,
                     seatNumber: i,
                     occupied: false,
@@ -136,13 +145,13 @@ export const processGuestDataFromServer = (guests, tables) => {
                 })
             }
         }
-        
+
         // Map guests to seats
         const updatedSeats = tableSeats.map(seat => {
-            const savedGuest = tableGuests.find(g => 
+            const savedGuest = tableGuests.find(g =>
                 g.seatid === seat.id && g.tableid === seat.tableId
             )
-            
+
             if (savedGuest) {
                 return {
                     ...seat,
@@ -159,10 +168,10 @@ export const processGuestDataFromServer = (guests, tables) => {
             }
             return seat
         })
-        
+
         const currentCount = updatedSeats.filter(seat => seat.occupied).length
-        const extendedCapacity = Math.max(12, maxSeatNumber)
-        
+        const extendedCapacity = Math.max(baseSeatsPerTable, maxSeatNumber)
+
         return {
             ...table,
             seats: updatedSeats,
