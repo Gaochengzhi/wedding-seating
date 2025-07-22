@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+/* Custom font classes for Chinese calligraphy */
+.font-chinese-serif {
+    font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif CN', serif;
+}
+
+.font-chinese-sans {
+    font-family: 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans CN', sans-serif;
+}
+
+.font-chinese-handwriting {
+    font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', 'Source Han Sans SC', cursive;
+}
+
+/* Custom animations for wedding invitation */
+@keyframes float-gentle {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-3px) rotate(0.5deg); }
+    66% { transform: translateY(3px) rotate(-0.5deg); }
+}
+
+@keyframes float-gentle-reverse {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(3px) rotate(-0.5deg); }
+    66% { transform: translateY(-3px) rotate(0.5deg); }
+}
+
+@keyframes pulse-gentle {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.9; }
+}
+
+@keyframes multi-axis-left {
+    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+    25% { transform: translateY(-8px) translateX(4px) rotate(1.2deg); }
+    50% { transform: translateY(6px) translateX(-3px) rotate(-0.8deg); }
+    75% { transform: translateY(10px) translateX(2px) rotate(0.5deg); }
+}
+
+@keyframes multi-axis-right {
+    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+    25% { transform: translateY(6px) translateX(-4px) rotate(-1deg); }
+    50% { transform: translateY(-10px) translateX(5px) rotate(1.5deg); }
+    75% { transform: translateY(-4px) translateX(-2px) rotate(-0.3deg); }
+}
+
+.animate-float-gentle {
+    animation: float-gentle 6s ease-in-out infinite;
+}
+
+.animate-float-gentle-reverse {
+    animation: float-gentle-reverse 6s ease-in-out infinite;
+}
+
+.animate-pulse-gentle {
+    animation: pulse-gentle 4s ease-in-out infinite;
+}
+
+.animate-multi-axis-left {
+    animation: multi-axis-left 8s ease-in-out infinite;
+}
+
+.animate-multi-axis-right {
+    animation: multi-axis-right 8s ease-in-out infinite;
+}
+
+:root {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+}
+
+a:hover {
+    color: #535bf2;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
+
+button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+button:hover {
+    border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+
+    a:hover {
+        color: #747bff;
+    }
+
+    button {
+        background-color: #f9f9f9;
+    }
+}

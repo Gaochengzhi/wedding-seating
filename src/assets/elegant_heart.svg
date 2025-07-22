@@ -1,0 +1,86 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 定义爱心路径 -->
+    <path id="heartShape" d="M0,15 
+             C-8,5 -15,5 -15,12 
+             C-15,20 -8,25 0,35
+             C8,25 15,20 15,12
+             C15,5 8,5 0,15 Z"/>
+  </defs>
+
+  <!-- 中心大爱心 -->
+  <g transform="translate(50, 45) scale(1.2)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="2" 
+         stroke-linejoin="round"
+         stroke-linecap="round"/>
+  </g>
+
+  <!-- 周围的小爱心们 - 按圆形排列 -->
+  
+  <!-- 上方小爱心 -->
+  <g transform="translate(50, 20) scale(0.4)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="1.5"/>
+  </g>
+
+  <!-- 右上小爱心 -->
+  <g transform="translate(73, 28) scale(0.35)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="1.5"/>
+  </g>
+
+  <!-- 右侧小爱心 -->
+  <g transform="translate(80, 45) scale(0.4)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="1.5"/>
+  </g>
+
+  <!-- 右下小爱心 -->
+  <g transform="translate(73, 65) scale(0.35)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="1.5"/>
+  </g>
+
+  <!-- 下方小爱心 -->
+  <g transform="translate(50, 75) scale(0.4)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="1.5"/>
+  </g>
+
+  <!-- 左下小爱心 -->
+  <g transform="translate(27, 65) scale(0.35)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="1.5"/>
+  </g>
+
+  <!-- 左侧小爱心 -->
+  <g transform="translate(20, 45) scale(0.4)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="1.5"/>
+  </g>
+
+  <!-- 左上小爱心 -->
+  <g transform="translate(27, 28) scale(0.35)">
+    <use href="#heartShape" 
+         fill="none" 
+         stroke="#333333" 
+         stroke-width="1.5"/>
+  </g>
+</svg>
