@@ -40,7 +40,7 @@ const GuestRegistrationModal = ({
                     padding: '16px 32px'
                 }}
             >
-                <div className="space-y-6 py-10">
+                <div className="space-y-6 py-8">
                     {/* Name - Required */}
                     <TextField
                         label="姓名 *"
@@ -62,12 +62,12 @@ const GuestRegistrationModal = ({
                     />
 
                     {/* Gender - Required with Switch */}
-                    <div className="flex flex-col space-y-8">
+                    <div className="flex flex-row items-center gap-5 mt-5">
                         <Typography
                             variant="body2"
                             sx={{
                                 color: '#6B7280',
-                                fontSize: '0.875rem',
+                                fontSize: '1rem',
                                 fontWeight: 'medium'
                             }}
                         >

@@ -105,16 +105,16 @@ export const useGuestManagement = (tables, setTables) => {
 
     const handlePhoneVerification = () => {
         if (!seatToVerify || !seatToVerify.guest) return
-        
+
         const phoneNumber = seatToVerify.guest.phone
         if (!phoneNumber || phoneNumber.length < 7) {
             console.warn('该宾客电话信息不完整，无法进行验证')
             setIsPhoneVerificationOpen(false)
             return
         }
-        
+
         const middleFour = phoneNumber.slice(3, 7) // Get middle 4 digits
-        
+
         if (phoneVerificationInput === middleFour) {
             // Verification successful
             if (verificationAction === 'edit') {
