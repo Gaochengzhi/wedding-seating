@@ -1,98 +1,108 @@
 # Wedding Invitation & Seat Selection System
 
-An elegant wedding invitation system with online seat selection functionality. This system consists of two main modules: invitation display and seat selection.
+[![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.0-blueviolet)](https://vitejs.dev/)
+[![Material-UI](https://img.shields.io/badge/Material--UI-5-green.svg)](https://mui.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3-blue.svg)](https://tailwindcss.com/)
+[![Express.js](https://img.shields.io/badge/Express.js-4.18-yellow.svg)](https://expressjs.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-18-green.svg)](https://nodejs.org/)
+
+An elegant wedding invitation system with online seat selection, statistics, rearrangement, and data export functionality.
+Live Demo: http://gaochengzhi.com/wedding/
 
 ## 🌟 Features
 
 - **Elegant Wedding Invitation**: Beautiful animated invitation page with couple photos and wedding details
 - **Online Seat Selection**: Interactive round table layout with real-time seat management
-- **Admin Management**: Complete guest management with drag-and-drop functionality
-- **Phone Verification**: Secure guest verification system
-- **Responsive Design**: Mobile-friendly interface
-- **Real-time Data**: CSV-based data persistence with auto-sync
+- **Admin Management**: Complete guest management system with drag-and-drop functionality
+- **Identity Verification**: Dual guest identity verification system with invitation code and phone number
+- **Responsive Design**: Mobile-first design with desktop compatibility
+- **Real-time Data**: Simple CSV-based data persistence with automatic synchronization
 
-## 🚀 Technology Stack
+## 🚀 Technology Architecture
 
 - **Frontend**: React 19 + Vite
 - **UI Components**: Material-UI (MUI) + Tailwind CSS
 - **Backend**: Express.js + Node.js
-- **Data Storage**: CSV files with automatic backup
-- **State Management**: React Hooks
+- **Data Storage**: CSV files
 - **Environment**: .env configuration
 
-## 📁 Project Structure
+## 📷 Screenshots
 
-```
-wedding_invitor/
-├── src/
-│   ├── components/
-│   │   ├── admin/           # Admin management components
-│   │   ├── guest/           # Guest registration components
-│   │   ├── ui/              # Reusable UI components
-│   │   ├── SeatSelection.jsx
-│   │   └── WelcomePage.jsx
-│   ├── hooks/               # Custom React hooks
-│   ├── utils/               # Utility functions
-│   └── assets/              # Images and SVG files
-├── server/
-│   ├── server.js           # Express server
-│   ├── config.js           # Server configuration
-│   └── data/               # CSV data files
-└── dist/                   # Production build files
-```
+### Web Version
+
+| Welcome Page                               | Management Page                              |
+| :----------------------------------------- | :------------------------------------------- |
+| ![alt text](screenshoots/welcome_page.jpg) | ![alt text](screenshoots/pc_manage_page.jpg) |
+
+### Mobile Version
+
+| Welcome Page                                 | Guest Registration                           | Identity Verification                         | Management Page                             | Seat Selection                             | Table Notes                              |
+| :------------------------------------------- | :------------------------------------------- | :-------------------------------------------- | :------------------------------------------ | :----------------------------------------- | :--------------------------------------- |
+| ![alt text](screenshoots/mobile_welcome.jpg) | ![alt text](screenshoots/guest_register.jpg) | ![alt text](screenshoots/id_verification.jpg) | ![alt text](screenshoots/mobile_manage.jpg) | ![alt text](screenshoots/table_select.jpg) | ![alt text](screenshoots/table_note.jpg) |
 
 ## 🛠️ Installation & Setup
 
-### Prerequisites
-- Node.js 18+ and npm
-- Git
+### Personal Configuration
 
-### 1. Clone the repository
-```bash
-git clone <your-repo-url>
-cd wedding_invitor
-```
-
-### 2. Install dependencies
-```bash
-npm install
-```
-
-### 3. Environment configuration
-Copy the example environment file:
-```bash
-cp example.env .env
-```
-
-Edit `.env` file with your configuration:
+Edit `.env.production` file configuration:
 ```env
-# App Configuration
-VITE_APP_MODE=development
-VITE_INVITATION_CODE=5201314
-VITE_ADMIN_USERNAME=root
-VITE_ADMIN_PASSWORD=root
+NODE_ENV=production
+APP_MODE=production
+PRODUCTION_SERVER=74.48.115.131
 
-# Server Configuration
-VITE_API_BASE_URL=http://localhost:3001/api
-VITE_PRODUCTION_SERVER=your-server-ip
+# Invitation Code Configuration
+ENABLE_INVITATION_CODE=false
+INVITATION_CODE=5201314
 
-# Asset Paths
-VITE_COUPLE_PATH=./src/assets/couple.svg
-VITE_LEFT_FLOWER_PATH=./src/assets/left_flower.svg
-VITE_RIGHT_FLOWER_PATH=./src/assets/right_flower.svg
-VITE_WEDDING_INVITATION_TITLE_PATH=./src/assets/wedding_invitaion_titile_logo.svg
-VITE_DINNING_ICON_PATH=./src/assets/dinning_icon.svg
+# Super Admin Credentials
+ADMIN_USERNAME=root
+ADMIN_PASSWORD=root
 
-# Table Configuration
-VITE_TOTAL_TABLES=22
-VITE_TABLES_PER_SIDE=11
-VITE_MAX_SEATS_PER_TABLE=16
-VITE_TABLE_RADIUS=65
-VITE_TABLE_CENTER_SIZE=96
+# Wedding Details
+GROOM_NAME=高成志
+BRIDE_NAME=刘子悦
+WEDDING_DATE=2025年10月2日中午
+WEDDING_LOCATION=常州中吴宾馆二楼龙城宴会厅1
+
+# Table and Seat Configuration
+DEFAULT_SEATS_PER_TABLE=10
+TABLES_PER_SIDE=11
+TOTAL_TABLES=22
+MAX_SEATS_PER_TABLE=16
+
+# Phone Validation Configuration
+PHONE_NUMBER_LENGTH=11
+
+# Image assets are now imported directly in components
+# No need for environment variable paths
+
+# Server Configuration (Backend)
+PORT=3001
+
+# API Base URL Configuration (Frontend)
+API_BASE_URL=http://74.48.115.131:3001/api
+PRODUCTION_API_BASE_URL=http://74.48.115.131:3001/api
 ```
 
-### 4. Development mode
-Run frontend and backend concurrently:
+Configure subdomain
+
+```js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig(({ mode }) => ({
+    base: mode === 'production' ? '/wedding/' : '/',
+    plugins: [
+        react(),
+        tailwindcss(),
+    ],
+}))
+```
+
+### 4. Development Mode
+Run both frontend and backend simultaneously:
 ```bash
 npm run dev:full
 ```
@@ -106,18 +116,18 @@ npm run server
 npm run dev
 ```
 
-The application will be available at:
+Application access addresses:
 - Frontend: `http://localhost:5173`
 - Backend API: `http://localhost:3001`
 
 ## 🏗️ Production Deployment
 
-### 1. Build the frontend
+### 1. Build frontend
 ```bash
 npm run build
 ```
 
-### 2. Server deployment structure
+### 2. Production server structure
 ```
 production-server/
 ├── dist/                   # Frontend build files
@@ -125,25 +135,25 @@ production-server/
 │   ├── server.js
 │   ├── config.js
 │   └── data/               # CSV data files
-├── .env                    # Production environment
+├── .env                    # Production environment configuration
 ├── package.json
 └── node_modules/
 ```
 
 ### 3. Production deployment steps
 
-#### Step 1: Prepare files for deployment
+#### Step 1: Prepare deployment files
 ```bash
 # Files to upload to production server:
 - dist/ (frontend build output)
 - server/ (backend code)
-- .env (production environment config)
+- .env (production environment configuration)
 - package.json
 ```
 
 #### Step 2: Server setup
 ```bash
-# On production server
+# Execute on production server
 npm install --production
 
 # Start backend service
@@ -155,64 +165,60 @@ node server.js
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com;
+    server_name gaochengzhi.com www.gaochengzhi.com;
 
-    # Frontend static files
-    location / {
-        root /path/to/dist;
-        try_files $uri $uri/ /index.html;
+    # ------------ ACME challenge (for renewal) ------------
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
     }
 
-    # API proxy to Express server
-    location /api {
-        proxy_pass http://localhost:3001;
+    # ------------ Wedding static site ------------
+    location ^~ /wedding/ {
+        alias /home/kounarushi/wedding/;   # Your dist directory
+        index index.html;
+        try_files $uri $uri/ /wedding/index.html;  # For frontend routing
+    }
+
+    # ------------ Other requests to backend ------------
+    location / {
+        proxy_pass http://127.0.0.1:8888;  # Your Next.js / Node service
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
         proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Real-IP        $remote_addr;
+        proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
-```
 
-#### Step 4: Process management (PM2)
-```bash
-# Install PM2 globally
-npm install -g pm2
+server {
+    listen 443 ssl http2;                       # Listen on 443
+    server_name gaochengzhi.com www.gaochengzhi.com;
 
-# Start application
-pm2 start server/server.js --name wedding-api
+    # ---- Certificate paths (replace with your actual paths) ----
+    ssl_certificate     /etc/letsencrypt/live/gaochengzhi.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/gaochengzhi.com/privkey.pem;
 
-# Enable auto-start on system boot
-pm2 startup
-pm2 save
-```
-
-#### Step 5: Data directory permissions
-```bash
-# Ensure CSV data directory has write permissions
-chmod 755 server/data/
-chmod 644 server/data/*.csv
+    # ---- Redirect to HTTP in one line ----
+    return 301 http://$host$request_uri;
+}
 ```
 
 ## 🎯 Usage Guide
 
-### Guest Flow
-1. **Welcome Page**: View wedding invitation with couple photos and details
-2. **Invitation Code**: Enter the invitation code (auto-filled in development)
-3. **Seat Selection**: Choose available seats on interactive round tables
-4. **Guest Registration**: Fill in name, gender, phone number and optional details
-5. **Phone Verification**: Verify phone number to edit or delete seats
-
 ### Admin Features
 1. **Admin Login**: Username: `root`, Password: `root`
-2. **Drag & Drop**: Move guests between seats by dragging
+2. **Drag & Drop**: Move guests between seats via drag and drop
 3. **Table Management**: Add/delete tables and add table notes
-4. **Guest Management**: View all guests in data table format
+4. **Guest Management**: View all guest data in table format
 5. **Relationship Management**: Manage guest relationship categories
 
 ## 🔧 API Endpoints
 
 ### Guest Management
 - `GET /api/guests` - Get all guests
-- `POST /api/guests` - Save/update guest
+- `POST /api/guests` - Save/update guest information
 - `DELETE /api/guests/:seatId/:tableId` - Delete specific guest
 - `DELETE /api/guests` - Clear all data
 
@@ -228,7 +234,7 @@ chmod 644 server/data/*.csv
 
 ## 🔒 Security Features
 
-- Phone number verification for guest operations
+- Dual identity verification with invitation code and phone number
 - Admin authentication system
 - Data validation and sanitization
 - Automatic data backup system
@@ -237,27 +243,13 @@ chmod 644 server/data/*.csv
 ## 🐛 Development Notes
 
 ### Environment Detection
-- **Development** (localhost): Auto-fills invitation code, direct access
-- **Production**: Requires correct invitation code input
+- **Test Mode** (localhost): Auto-fills invitation code, direct access
+- **Production Mode**: Requires correct invitation code input
 
 ### Data Management
 - All data stored in CSV files in `server/data/`
 - Automatic backup system for data protection
-- Real-time sync between frontend and backend
-
-### Responsive Design
-- Mobile-optimized interface
-- Touch-friendly drag and drop
-- Adaptive layout for different screen sizes
-
-## 📝 License
-
-This project is private and proprietary.
-
-## 🤝 Contributing
-
-This is a private wedding project. External contributions are not accepted.
-
+- Real-time synchronization between frontend and backend
 ---
 
 For deployment support or technical issues, please check the troubleshooting section in the documentation.
