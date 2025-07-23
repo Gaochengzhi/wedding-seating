@@ -31,7 +31,7 @@
 
 | 欢迎页面                                     | 宾客注册                                     | 身份验证                                      | 管理页面                                    | 座位选择                                   | 桌子备注                                 |
 | :------------------------------------------- | :------------------------------------------- | :-------------------------------------------- | :------------------------------------------ | :----------------------------------------- | :--------------------------------------- |
-| ![alt text](screenshoots/mobile_welcome.jpg) | ![alt text](screenshoots/guest_register.jpg) | ![alt text](screenshoots/id_verification.jpg) | ![alt text](screenshoots/mobile_manage.jpg) | ![alt text](screenshoots/table_select.jpg) | ![alt text](screenshoots/table_note.jpg) |
+| <img src="screenshoots/mobile_welcome.jpg" alt="移动端欢迎" height="300" style="object-fit: cover;"/> | <img src="screenshoots/guest_register.jpg" alt="宾客注册" height="300" style="object-fit: cover;"/> | <img src="screenshoots/id_verification.jpg" alt="身份验证" height="300" style="object-fit: cover;"/> | <img src="screenshoots/mobile_manage.jpg" alt="移动端管理" height="300" style="object-fit: cover;"/> | <img src="screenshoots/table_select.jpg" alt="座位选择" height="300" style="object-fit: cover;"/> | <img src="screenshoots/table_note.jpg" alt="桌子备注" height="300" style="object-fit: cover;"/> |
 
 
 ## 技术架构
