@@ -2,15 +2,15 @@
 
 // Determine API base URL based on environment
 const getApiBaseUrl = () => {
-    // Check if we're on production server
-    const isProductionServer = window.location.hostname === import.meta.env.VITE_PRODUCTION_SERVER || 
-                               window.location.hostname === '74.48.115.131'
+    const hostname = window.location.hostname
     
-    if (isProductionServer) {
-        return import.meta.env.VITE_PRODUCTION_API_BASE_URL || 'http://74.48.115.131:3001/api'
-    } else {
-        return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api'
+    // Both IP and domain access use HTTP API (no HTTPS)
+    if (hostname === '74.48.115.131' || hostname === 'gaochengzhi.com') {
+        return 'http://74.48.115.131:3001/api'
     }
+    
+    // Development environment
+    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api'
 }
 
 const API_BASE_URL = getApiBaseUrl()
@@ -22,11 +22,11 @@ class ApiClient {
         try {
             const response = await fetch(`${API_BASE_URL}${endpoint}`)
             const data = await response.json()
-            
+
             if (!data.success) {
                 throw new Error(data.error || 'API request failed')
             }
-            
+
             return data
         } catch (error) {
             console.error(`API GET ${endpoint} failed:`, error)
@@ -43,13 +43,13 @@ class ApiClient {
                 },
                 body: JSON.stringify(body)
             })
-            
+
             const data = await response.json()
-            
+
             if (!data.success) {
                 throw new Error(data.error || 'API request failed')
             }
-            
+
             return data
         } catch (error) {
             console.error(`API POST ${endpoint} failed:`, error)
@@ -62,13 +62,13 @@ class ApiClient {
             const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method: 'DELETE'
             })
-            
+
             const data = await response.json()
-            
+
             if (!data.success) {
                 throw new Error(data.error || 'API request failed')
             }
-            
+
             return data
         } catch (error) {
             console.error(`API DELETE ${endpoint} failed:`, error)
@@ -85,13 +85,13 @@ class ApiClient {
                 },
                 body: JSON.stringify(body)
             })
-            
+
             const data = await response.json()
-            
+
             if (!data.success) {
                 throw new Error(data.error || 'API request failed')
             }
-            
+
             return data
         } catch (error) {
             console.error(`API PUT ${endpoint} failed:`, error)

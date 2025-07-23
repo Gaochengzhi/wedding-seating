@@ -5,7 +5,7 @@ import { Button } from '@mui/material'
 import { apiClient } from '../utils/apiClient'
 
 // Import image assets directly
-import dinningIconSvg from '../assets/dinning_icon.svg'
+import dinningIconSvg from '../assets/dinning_icon.png'
 
 // Components
 import RoundTableCard from './ui/RoundTableCard'

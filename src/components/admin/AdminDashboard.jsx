@@ -198,24 +198,26 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
                 {/* Tab Navigation */}
                 <div className="mb-4">
                     <div className="flex flex-row gap-2">
-                        <button
+                        <div
                             onClick={() => setActiveTab(0)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium border-2 border-dashed transition-all duration-200 ${activeTab === 0
-                                ? 'bg-gray-400 border-gray-500 text-gray-800'
-                                : 'bg-white border-gray-300 text-gray-800 hover:border-gray-400 hover:bg-gray-50'
+                            className={`px-3 flex justify-center items-center py-1.5 rounded-full text-xs font-medium border-2 transition-all duration-200 ${activeTab === 0
+                                ? 'bg-gray-200 border-gray-800 text-gray-800'
+                                : 'bg-white border-gray-800 text-gray-800 hover:bg-gray-50'
                                 }`}
+                            style={{ borderStyle: 'solid' }}
                         >
                             宾客数据 ({guests.length})
-                        </button>
-                        <button
+                        </div>
+                        <div
                             onClick={() => setActiveTab(1)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium border-2 border-dashed transition-all duration-200 ${activeTab === 1
-                                ? 'bg-gray-400 border-gray-500 text-gray-800'
-                                : 'bg-white border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50'
+                            className={`px-3 flex justify-center items-center py-1.5 rounded-full text-xs font-medium border-2 transition-all duration-200 ${activeTab === 1
+                                ? 'bg-gray-200 border-gray-800 text-gray-800'
+                                : 'bg-white border-gray-800 text-gray-800 hover:bg-gray-50'
                                 }`}
+                            style={{ borderStyle: 'solid' }}
                         >
                             关系标签 ({relationships.length})
-                        </button>
+                        </div>
                         <IconButton
                             onClick={loadAllData}
                             sx={{
@@ -239,7 +241,7 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
             </div>
 
             {/* Main Scrollable Content */}
-            <div 
+            <div
                 className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-4 py-4"
                 style={{
                     WebkitOverflowScrolling: 'touch',
@@ -247,7 +249,7 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
                     minHeight: 0
                 }}
             >
-                
+
                 <div className="bg-white border-2 border-dashed border-gray-200 rounded-lg">
                     {activeTab === 0 && (
                         <GuestDataTable
@@ -268,7 +270,7 @@ const AdminDashboard = ({ onBack, refreshTableData }) => {
                         />
                     )}
                 </div>
-                
+
                 {/* Stats at bottom */}
                 <div className="mt-4 p-3 bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg">
                     <Typography variant="body2" className="text-gray-600 text-sm">

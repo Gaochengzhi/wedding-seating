@@ -15,8 +15,17 @@ const app = express()
 const PORT = config.PORT
 
 // Middleware
-app.use(cors())
+app.use(cors({
+    origin: '*', // Allow all origins for now, restrict in production if needed
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: false
+}))
 app.use(express.json())
+
+// API base path for all environments
+const API_BASE_PATH = '/api'
+console.log(`API will be served at: ${API_BASE_PATH}/*`)
 
 // Data directory and CSV file paths
 const dataDir = path.join(__dirname, 'data')
@@ -64,7 +73,7 @@ const relationshipsHeaders = [
 // Initialize tables CSV file
 const initializeTablesFile = () => {
     const isDevelopment = process.env.NODE_ENV === 'development'
-    
+
     if (isDevelopment) {
         // In development, only create if it doesn't exist
         if (!fs.existsSync(tablesFilePath)) {
@@ -72,13 +81,13 @@ const initializeTablesFile = () => {
                 path: tablesFilePath,
                 header: tablesHeaders
             })
-            
+
             // Create tables structure based on configuration
             const tables = []
             for (let i = 1; i <= config.TOTAL_TABLES; i++) {
                 const side = i <= config.TABLES_PER_SIDE ? 'left' : 'right'
                 const displayNumber = side === 'left' ? i : i - config.TABLES_PER_SIDE
-                
+
                 tables.push({
                     tableid: `table_${i}`,
                     displaynumber: displayNumber,
@@ -87,7 +96,7 @@ const initializeTablesFile = () => {
                     timestamp: new Date().toISOString()
                 })
             }
-            
+
             csvWriter.writeRecords(tables)
             console.log('Initialized tables CSV file for development:', tablesFilePath)
         }
@@ -103,7 +112,7 @@ const initializeTablesFile = () => {
 // Initialize relationships CSV file with default options
 const initializeRelationshipsFile = () => {
     const isDevelopment = process.env.NODE_ENV === 'development'
-    
+
     if (isDevelopment) {
         // In development, only create if it doesn't exist
         if (!fs.existsSync(relationshipsFilePath)) {
@@ -111,7 +120,7 @@ const initializeRelationshipsFile = () => {
                 path: relationshipsFilePath,
                 header: relationshipsHeaders
             })
-            
+
             // Default relationship options
             const defaultRelationships = [
                 { value: 'groom_classmate', label: '男方同学/同事', category: 'groom', order: 1, timestamp: new Date().toISOString() },
@@ -124,7 +133,7 @@ const initializeRelationshipsFile = () => {
                 { value: 'bride_father_colleagues', label: '女方爸爸同事', category: 'bride_family', order: 8, timestamp: new Date().toISOString() },
                 { value: 'other', label: '其他', category: 'other', order: 9, timestamp: new Date().toISOString() }
             ]
-            
+
             csvWriter.writeRecords(defaultRelationships)
             console.log('Initialized relationships CSV file for development:', relationshipsFilePath)
         }
@@ -141,15 +150,15 @@ const initializeRelationshipsFile = () => {
 const readRelationshipsFromCsv = () => {
     return new Promise((resolve, reject) => {
         const relationships = []
-        
+
         if (!fs.existsSync(relationshipsFilePath)) {
             resolve([])
             return
         }
-        
+
         fs.createReadStream(relationshipsFilePath)
-            .pipe(csv({ 
-                mapHeaders: ({ header }) => header.toLowerCase() 
+            .pipe(csv({
+                mapHeaders: ({ header }) => header.toLowerCase()
             }))
             .on('data', (row) => {
                 relationships.push({
@@ -175,13 +184,13 @@ const writeRelationshipsToCsv = (relationships) => {
             path: relationshipsFilePath,
             header: relationshipsHeaders
         })
-        
+
         const processedRelationships = relationships.map((rel, index) => ({
             ...rel,
             order: rel.order || index + 1,
             timestamp: rel.timestamp || new Date().toISOString()
         }))
-        
+
         csvWriter.writeRecords(processedRelationships)
             .then(() => {
                 console.log('Wrote', processedRelationships.length, 'relationships to CSV')
@@ -195,15 +204,15 @@ const writeRelationshipsToCsv = (relationships) => {
 const readTablesFromCsv = () => {
     return new Promise((resolve, reject) => {
         const tables = []
-        
+
         if (!fs.existsSync(tablesFilePath)) {
             resolve([])
             return
         }
-        
+
         fs.createReadStream(tablesFilePath)
-            .pipe(csv({ 
-                mapHeaders: ({ header }) => header.toLowerCase() 
+            .pipe(csv({
+                mapHeaders: ({ header }) => header.toLowerCase()
             }))
             .on('data', (row) => {
                 tables.push(row)
@@ -224,12 +233,12 @@ const writeTablesToCsv = (tables) => {
             path: tablesFilePath,
             header: tablesHeaders
         })
-        
+
         const processedTables = tables.map(table => ({
             ...table,
             timestamp: table.timestamp || new Date().toISOString()
         }))
-        
+
         csvWriter.writeRecords(processedTables)
             .then(() => {
                 console.log('Wrote', processedTables.length, 'tables to CSV')
@@ -245,15 +254,15 @@ const initializeCsvFile = async () => {
         path: csvFilePath,
         header: csvHeaders
     })
-    
+
     // Check if we're in development mode - only if explicitly set to development
     // In production, CSV files should be copied from templates during deployment
     const isDevelopment = process.env.NODE_ENV === 'development'
-    
+
     if (isDevelopment) {
         // Check if file doesn't exist OR is empty (only header)
         let shouldInitialize = false
-        
+
         if (!fs.existsSync(csvFilePath)) {
             shouldInitialize = true
             console.log('CSV file does not exist, will create with demo data')
@@ -270,7 +279,7 @@ const initializeCsvFile = async () => {
                 shouldInitialize = true
             }
         }
-        
+
         if (shouldInitialize) {
             // Create demo data for first table (12 guests)
             const demoGuests = [
@@ -287,7 +296,7 @@ const initializeCsvFile = async () => {
                 { name: '杨三', gender: 'male', phone: '13800138011', notes: '父亲同事', accommodation: 'Yes', relationship: 'groom_father_colleagues', tableid: 'table_1', seatid: 'table_1_seat_10', seatnumber: 11, timestamp: new Date().toISOString() },
                 { name: '黄四', gender: 'female', phone: '13800138012', notes: '父亲朋友', accommodation: 'No', relationship: 'bride_father_friends', tableid: 'table_1', seatid: 'table_1_seat_11', seatnumber: 12, timestamp: new Date().toISOString() }
             ]
-            
+
             await csvWriter.writeRecords(demoGuests)
             console.log('Initialized CSV file with demo data for development:', csvFilePath)
         } else {
@@ -306,22 +315,22 @@ const initializeCsvFile = async () => {
 const readGuestsFromCsv = () => {
     return new Promise((resolve, reject) => {
         const guests = []
-        
+
         if (!fs.existsSync(csvFilePath)) {
             resolve([])
             return
         }
-        
+
         fs.createReadStream(csvFilePath)
-            .pipe(csv({ 
-                mapHeaders: ({ header }) => header.toLowerCase() 
+            .pipe(csv({
+                mapHeaders: ({ header }) => header.toLowerCase()
             }))
             .on('data', (row) => {
                 // Skip empty rows (headers are now automatically lowercase)
                 if (!row.name || row.name.trim() === '') {
                     return
                 }
-                
+
                 // Convert accommodation string back to boolean
                 row.accommodation = row.accommodation === 'true' || row.accommodation === 'Yes'
                 guests.push(row)
@@ -342,16 +351,16 @@ const writeGuestsToCsv = (guests) => {
             path: csvFilePath,
             header: csvHeaders
         })
-        
+
         // Filter out empty guests and convert boolean to string for CSV storage
         const validGuests = guests.filter(guest => guest.name && guest.name.trim() !== '')
         const processedGuests = validGuests.map(guest => ({
             ...guest,
             accommodation: guest.accommodation ? 'Yes' : 'No'
         }))
-        
+
         console.log('Writing valid guests to CSV:', processedGuests)
-        
+
         csvWriter.writeRecords(processedGuests)
             .then(() => {
                 console.log('Wrote', processedGuests.length, 'valid guests to CSV')
@@ -364,7 +373,7 @@ const writeGuestsToCsv = (guests) => {
 // API Routes
 
 // Get all guests
-app.get('/api/guests', async (req, res) => {
+app.get(`${API_BASE_PATH}/guests`, async (req, res) => {
     try {
         const guests = await readGuestsFromCsv()
         res.json({ success: true, data: guests })
@@ -375,24 +384,24 @@ app.get('/api/guests', async (req, res) => {
 })
 
 // Save a new guest or update existing
-app.post('/api/guests', async (req, res) => {
+app.post(`${API_BASE_PATH}/guests`, async (req, res) => {
     try {
         const { guest, seat } = req.body
-        
+
         if (!guest || !seat) {
             return res.status(400).json({ success: false, error: 'Guest and seat data required' })
         }
-        
+
         // Read existing guests
         const existingGuests = await readGuestsFromCsv()
         console.log('Existing guests before save:', existingGuests)
-        
+
         // Remove any existing guest at the same seat
-        const filteredGuests = existingGuests.filter(g => 
+        const filteredGuests = existingGuests.filter(g =>
             !(g.seatid === seat.id && g.tableid === seat.tableId)
         )
         console.log('Filtered guests:', filteredGuests)
-        
+
         // Add new guest
         const newGuest = {
             name: guest.name,
@@ -406,15 +415,15 @@ app.post('/api/guests', async (req, res) => {
             seatnumber: seat.seatNumber || seat.seatNumber,
             timestamp: new Date().toISOString()
         }
-        
+
         filteredGuests.push(newGuest)
         console.log('All guests to save:', filteredGuests)
-        
+
         // Write back to CSV
         await writeGuestsToCsv(filteredGuests)
-        
+
         res.json({ success: true, data: newGuest })
-        
+
     } catch (error) {
         console.error('Error saving guest:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -422,34 +431,34 @@ app.post('/api/guests', async (req, res) => {
 })
 
 // Delete a guest
-app.delete('/api/guests/:seatId/:tableId', async (req, res) => {
+app.delete(`${API_BASE_PATH}/guests/:seatId/:tableId`, async (req, res) => {
     try {
         const { seatId, tableId } = req.params
-        
+
         console.log(`=== DELETE REQUEST ===`)
         console.log(`Received seatId: "${seatId}", tableId: "${tableId}"`)
-        
+
         // Read existing guests
         const existingGuests = await readGuestsFromCsv()
         console.log(`Current guests in CSV:`)
         existingGuests.forEach((g, i) => {
             console.log(`  ${i}: seatid="${g.seatid}", tableid="${g.tableid}", name="${g.name}"`)
         })
-        
+
         // Remove guest at the specified seat (CSV fields are lowercase)
-        const filteredGuests = existingGuests.filter(g => 
+        const filteredGuests = existingGuests.filter(g =>
             !(g.seatid === seatId && g.tableid === tableId)
         )
-        
+
         console.log(`Before deletion: ${existingGuests.length} guests`)
         console.log(`After deletion: ${filteredGuests.length} guests`)
         console.log(`=== END DELETE REQUEST ===`)
-        
+
         // Write back to CSV
         await writeGuestsToCsv(filteredGuests)
-        
+
         res.json({ success: true, message: 'Guest deleted successfully' })
-        
+
     } catch (error) {
         console.error('Error deleting guest:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -457,7 +466,7 @@ app.delete('/api/guests/:seatId/:tableId', async (req, res) => {
 })
 
 // Clear all guests (for testing)
-app.delete('/api/guests', async (req, res) => {
+app.delete(`${API_BASE_PATH}/guests`, async (req, res) => {
     try {
         await writeGuestsToCsv([])
         res.json({ success: true, message: 'All guests cleared' })
@@ -468,13 +477,13 @@ app.delete('/api/guests', async (req, res) => {
 })
 
 // Clean up CSV file (remove empty rows)
-app.post('/api/guests/cleanup', async (req, res) => {
+app.post(`${API_BASE_PATH}/guests/cleanup`, async (req, res) => {
     try {
         const existingGuests = await readGuestsFromCsv()
         const validGuests = existingGuests.filter(guest => guest.name && guest.name.trim() !== '')
         await writeGuestsToCsv(validGuests)
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             message: `Cleaned up CSV, removed ${existingGuests.length - validGuests.length} empty rows`,
             validGuests: validGuests.length
         })
@@ -487,10 +496,10 @@ app.post('/api/guests/cleanup', async (req, res) => {
 // Tables API Routes
 
 // Get all tables
-app.get('/api/tables', async (req, res) => {
+app.get(`${API_BASE_PATH}/tables`, async (req, res) => {
     try {
         const tables = await readTablesFromCsv()
-        
+
         // Sort tables by side first, then by display number
         const sortedTables = tables.sort((a, b) => {
             // First sort by side (left first, then right)
@@ -500,7 +509,7 @@ app.get('/api/tables', async (req, res) => {
             // Then sort by display number within each side
             return parseInt(a.displaynumber) - parseInt(b.displaynumber)
         })
-        
+
         res.json({ success: true, data: sortedTables })
     } catch (error) {
         console.error('Error reading tables:', error)
@@ -509,25 +518,25 @@ app.get('/api/tables', async (req, res) => {
 })
 
 // Add a new table
-app.post('/api/tables', async (req, res) => {
+app.post(`${API_BASE_PATH}/tables`, async (req, res) => {
     try {
         const { displayNumber, side, notes } = req.body
-        
+
         if (!displayNumber || !side) {
             return res.status(400).json({ success: false, error: 'Display number and side are required' })
         }
-        
+
         // Read existing tables
         const existingTables = await readTablesFromCsv()
-        
+
         // Find the highest table ID to generate a new one
         const maxTableNum = Math.max(0, ...existingTables.map(t => {
             const match = t.tableid.match(/table_(\d+)/)
             return match ? parseInt(match[1]) : 0
         }))
-        
+
         const newTableId = `table_${maxTableNum + 1}`
-        
+
         // Create new table entry
         const newTable = {
             tableid: newTableId,
@@ -536,15 +545,15 @@ app.post('/api/tables', async (req, res) => {
             notes: notes || '',
             timestamp: new Date().toISOString()
         }
-        
+
         // Add to existing tables
         const updatedTables = [...existingTables, newTable]
-        
+
         // Write back to CSV
         await writeTablesToCsv(updatedTables)
-        
+
         res.json({ success: true, data: newTable })
-        
+
     } catch (error) {
         console.error('Error adding table:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -552,32 +561,32 @@ app.post('/api/tables', async (req, res) => {
 })
 
 // Delete a table
-app.delete('/api/tables/:tableId', async (req, res) => {
+app.delete(`${API_BASE_PATH}/tables/:tableId`, async (req, res) => {
     try {
         const { tableId } = req.params
-        
+
         console.log(`Deleting table: ${tableId}`)
-        
+
         // Read existing tables
         const existingTables = await readTablesFromCsv()
-        
+
         // Remove the specific table
         const filteredTables = existingTables.filter(table => table.tableid !== tableId)
-        
+
         if (filteredTables.length === existingTables.length) {
             return res.status(404).json({ success: false, error: 'Table not found' })
         }
-        
+
         // Also remove all guests from this table
         const existingGuests = await readGuestsFromCsv()
         const filteredGuests = existingGuests.filter(guest => guest.tableid !== tableId)
-        
+
         // Write both back to CSV
         await writeTablesToCsv(filteredTables)
         await writeGuestsToCsv(filteredGuests)
-        
+
         res.json({ success: true, message: 'Table deleted successfully' })
-        
+
     } catch (error) {
         console.error('Error deleting table:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -585,16 +594,16 @@ app.delete('/api/tables/:tableId', async (req, res) => {
 })
 
 // Update table notes
-app.put('/api/tables/:tableId', async (req, res) => {
+app.put(`${API_BASE_PATH}/tables/:tableId`, async (req, res) => {
     try {
         const { tableId } = req.params
         const { notes } = req.body
-        
+
         console.log(`Updating table ${tableId} notes to: "${notes}"`)
-        
+
         // Read existing tables
         const existingTables = await readTablesFromCsv()
-        
+
         // Update the specific table
         const updatedTables = existingTables.map(table => {
             if (table.tableid === tableId) {
@@ -606,12 +615,12 @@ app.put('/api/tables/:tableId', async (req, res) => {
             }
             return table
         })
-        
+
         // Write back to CSV
         await writeTablesToCsv(updatedTables)
-        
+
         res.json({ success: true, message: 'Table notes updated successfully' })
-        
+
     } catch (error) {
         console.error('Error updating table notes:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -621,7 +630,7 @@ app.put('/api/tables/:tableId', async (req, res) => {
 // Relationships API Routes
 
 // Get all relationships
-app.get('/api/relationships', async (req, res) => {
+app.get(`${API_BASE_PATH}/relationships`, async (req, res) => {
     try {
         const relationships = await readRelationshipsFromCsv()
         res.json({ success: true, data: relationships })
@@ -632,22 +641,22 @@ app.get('/api/relationships', async (req, res) => {
 })
 
 // Add a new relationship
-app.post('/api/relationships', async (req, res) => {
+app.post(`${API_BASE_PATH}/relationships`, async (req, res) => {
     try {
         const { value, label, category } = req.body
-        
+
         if (!value || !label) {
             return res.status(400).json({ success: false, error: 'Value and label are required' })
         }
-        
+
         // Read existing relationships
         const existingRelationships = await readRelationshipsFromCsv()
-        
+
         // Check for duplicate values
         if (existingRelationships.some(rel => rel.value === value)) {
             return res.status(400).json({ success: false, error: 'Relationship value already exists' })
         }
-        
+
         // Create new relationship with next order
         const maxOrder = Math.max(0, ...existingRelationships.map(rel => rel.order))
         const newRelationship = {
@@ -657,15 +666,15 @@ app.post('/api/relationships', async (req, res) => {
             order: maxOrder + 1,
             timestamp: new Date().toISOString()
         }
-        
+
         // Add to existing relationships
         const updatedRelationships = [...existingRelationships, newRelationship]
-        
+
         // Write back to CSV
         await writeRelationshipsToCsv(updatedRelationships)
-        
+
         res.json({ success: true, data: newRelationship })
-        
+
     } catch (error) {
         console.error('Error adding relationship:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -673,22 +682,22 @@ app.post('/api/relationships', async (req, res) => {
 })
 
 // Update a relationship
-app.put('/api/relationships/:value', async (req, res) => {
+app.put(`${API_BASE_PATH}/relationships/:value`, async (req, res) => {
     try {
         const { value } = req.params
         const { label, category, order } = req.body
-        
+
         console.log(`Updating relationship ${value}`)
-        
+
         // Read existing relationships
         const existingRelationships = await readRelationshipsFromCsv()
-        
+
         // Find and update the specific relationship
         const relationshipIndex = existingRelationships.findIndex(rel => rel.value === value)
         if (relationshipIndex === -1) {
             return res.status(404).json({ success: false, error: 'Relationship not found' })
         }
-        
+
         // Update the relationship
         existingRelationships[relationshipIndex] = {
             ...existingRelationships[relationshipIndex],
@@ -697,12 +706,12 @@ app.put('/api/relationships/:value', async (req, res) => {
             order: order !== undefined ? parseInt(order) : existingRelationships[relationshipIndex].order,
             timestamp: new Date().toISOString()
         }
-        
+
         // Write back to CSV
         await writeRelationshipsToCsv(existingRelationships)
-        
+
         res.json({ success: true, message: 'Relationship updated successfully' })
-        
+
     } catch (error) {
         console.error('Error updating relationship:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -710,27 +719,27 @@ app.put('/api/relationships/:value', async (req, res) => {
 })
 
 // Delete a relationship
-app.delete('/api/relationships/:value', async (req, res) => {
+app.delete(`${API_BASE_PATH}/relationships/:value`, async (req, res) => {
     try {
         const { value } = req.params
-        
+
         console.log(`Deleting relationship: ${value}`)
-        
+
         // Read existing relationships
         const existingRelationships = await readRelationshipsFromCsv()
-        
+
         // Remove the specific relationship
         const filteredRelationships = existingRelationships.filter(rel => rel.value !== value)
-        
+
         if (filteredRelationships.length === existingRelationships.length) {
             return res.status(404).json({ success: false, error: 'Relationship not found' })
         }
-        
+
         // Write back to CSV
         await writeRelationshipsToCsv(filteredRelationships)
-        
+
         res.json({ success: true, message: 'Relationship deleted successfully' })
-        
+
     } catch (error) {
         console.error('Error deleting relationship:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -738,28 +747,28 @@ app.delete('/api/relationships/:value', async (req, res) => {
 })
 
 // Reorder relationships
-app.put('/api/relationships/reorder', async (req, res) => {
+app.put(`${API_BASE_PATH}/relationships/reorder`, async (req, res) => {
     try {
         const { relationships } = req.body
-        
+
         if (!Array.isArray(relationships)) {
             return res.status(400).json({ success: false, error: 'Relationships array is required' })
         }
-        
+
         console.log('Reordering relationships')
-        
+
         // Update order for each relationship
         const updatedRelationships = relationships.map((rel, index) => ({
             ...rel,
             order: index + 1,
             timestamp: new Date().toISOString()
         }))
-        
+
         // Write back to CSV
         await writeRelationshipsToCsv(updatedRelationships)
-        
+
         res.json({ success: true, message: 'Relationships reordered successfully' })
-        
+
     } catch (error) {
         console.error('Error reordering relationships:', error)
         res.status(500).json({ success: false, error: error.message })
@@ -767,50 +776,50 @@ app.put('/api/relationships/reorder', async (req, res) => {
 })
 
 // Invitation code verification
-app.post('/api/auth/verify-invitation', (req, res) => {
+app.post(`${API_BASE_PATH}/auth/verify-invitation`, (req, res) => {
     try {
         const { invitationCode } = req.body
-        
+
         // 如果禁用邀请码验证，直接返回成功
         if (!config.ENABLE_INVITATION_CODE) {
-            return res.json({ 
-                success: true, 
-                message: 'Invitation code verification disabled' 
+            return res.json({
+                success: true,
+                message: 'Invitation code verification disabled'
             })
         }
-        
+
         // 验证邀请码
         if (!invitationCode) {
-            return res.status(400).json({ 
-                success: false, 
-                error: '邀请码不能为空' 
+            return res.status(400).json({
+                success: false,
+                error: '邀请码不能为空'
             })
         }
-        
+
         if (invitationCode === config.INVITATION_CODE) {
-            res.json({ 
-                success: true, 
-                message: '邀请码验证成功' 
+            res.json({
+                success: true,
+                message: '邀请码验证成功'
             })
         } else {
-            res.status(401).json({ 
-                success: false, 
-                error: '邀请码错误' 
+            res.status(401).json({
+                success: false,
+                error: '邀请码错误'
             })
         }
     } catch (error) {
         console.error('Error verifying invitation code:', error)
-        res.status(500).json({ 
-            success: false, 
-            error: '服务器内部错误' 
+        res.status(500).json({
+            success: false,
+            error: '服务器内部错误'
         })
     }
 })
 
 // Health check
-app.get('/api/health', (req, res) => {
-    res.json({ 
-        success: true, 
+app.get(`${API_BASE_PATH}/health`, (req, res) => {
+    res.json({
+        success: true,
         message: 'Wedding invitation server is running',
         timestamp: new Date().toISOString()
     })
@@ -820,7 +829,7 @@ app.get('/api/health', (req, res) => {
 app.listen(PORT, async () => {
     console.log(`🎉 Wedding invitation server running on port ${PORT}`)
     console.log(`📊 CSV file will be stored at: ${csvFilePath}`)
-    
+
     // Initialize CSV files
     try {
         await initializeCsvFile()

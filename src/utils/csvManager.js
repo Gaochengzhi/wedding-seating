@@ -88,43 +88,5 @@ export const uploadCSV = (file, callback) => {
     reader.readAsText(file, 'utf-8')
 }
 
-export const saveToLocalStorage = (tables) => {
-    try {
-        const guestDataArray = []
-        
-        tables.forEach(table => {
-            table.seats.forEach(seat => {
-                if (seat.occupied && seat.guest) {
-                    guestDataArray.push({
-                        guest: seat.guest,
-                        seat: {
-                            id: seat.id,
-                            tableId: seat.tableId,
-                            seatNumber: seat.seatNumber
-                        }
-                    })
-                }
-            })
-        })
-        
-        localStorage.setItem('wedding_guests', JSON.stringify(guestDataArray))
-        console.log('Saved to localStorage:', guestDataArray.length, 'guests')
-        
-    } catch (error) {
-        console.error('Error saving to localStorage:', error)
-    }
-}
-
-export const loadFromLocalStorage = () => {
-    try {
-        const saved = localStorage.getItem('wedding_guests')
-        if (saved) {
-            const guestDataArray = JSON.parse(saved)
-            console.log('Loaded from localStorage:', guestDataArray.length, 'guests')
-            return guestDataArray
-        }
-    } catch (error) {
-        console.error('Error loading from localStorage:', error)
-    }
-    return []
-}
+// Note: localStorage functions have been removed to ensure data consistency with server
+// All data should be fetched from and synced with the Express backend server

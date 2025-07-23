@@ -79,6 +79,20 @@ function App() {
         loadDataFromServer()
     }, [])
 
+    // Auto-sync with server every 30 seconds to ensure data consistency
+    useEffect(() => {
+        const syncInterval = setInterval(() => {
+            if (currentView === 'seatSelection') {
+                // Only sync when user is on seat selection page
+                loadDataFromServer().catch(error => {
+                    console.log('Auto-sync failed (this is normal if server is unreachable):', error)
+                })
+            }
+        }, 30000) // 30 seconds
+
+        return () => clearInterval(syncInterval)
+    }, [currentView])
+
     // Direct view change
     const changeView = (newView) => {
         setCurrentView(newView)

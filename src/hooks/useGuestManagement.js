@@ -33,8 +33,14 @@ export const useGuestManagement = (tables, setTables) => {
     }
 
     const handleRegistrationSubmit = async () => {
+        // Set default gender to 'male' if not selected
+        const submissionData = {
+            ...guestData,
+            gender: guestData.gender || 'male'
+        }
+        
         // Validate required fields
-        const errors = validateGuestData(guestData)
+        const errors = validateGuestData(submissionData)
         if (errors.length > 0) {
             console.warn('请填写所有必填项：' + errors.join('、'))
             // Use a more gentle notification instead of alert
@@ -43,7 +49,7 @@ export const useGuestManagement = (tables, setTables) => {
 
         try {
             // Save to backend
-            await apiClient.saveGuest(guestData, {
+            await apiClient.saveGuest(submissionData, {
                 id: selectedSeat.id,
                 tableId: selectedSeat.tableId,
                 seatNumber: selectedSeat.seatNumber
@@ -57,7 +63,7 @@ export const useGuestManagement = (tables, setTables) => {
                             return {
                                 ...seat,
                                 occupied: true,
-                                guest: guestData
+                                guest: submissionData
                             }
                         }
                         return seat
