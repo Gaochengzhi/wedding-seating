@@ -4,6 +4,9 @@ import { Button } from '@mui/material'
 // Utils
 import { apiClient } from '../utils/apiClient'
 
+// Import image assets directly
+import dinningIconSvg from '../assets/dinning_icon.svg'
+
 // Components
 import RoundTableCard from './ui/RoundTableCard'
 import AdminLoginModal from './admin/AdminLoginModal'
@@ -126,14 +129,14 @@ const SeatSelection = ({
         <>
             <div className="min-h-screen bg-white">
                 {/* Header Section - Fixed at top */}
-                <div className="sticky top-3 z-10 bg-white">
-                    <div className="mx-auto px-4">
+                <div className="sticky top-3 z-10 bg-white mx-4">
+                    <div className="mx-auto px-6 py-4">
                         {/* Title Icon */}
                         <div className="flex justify-center mb-4">
                             <img
-                                src={import.meta.env.VITE_DINNING_ICON_PATH}
+                                src={dinningIconSvg}
                                 alt="选座图标"
-                                className="h-35 w-auto"
+                                className="h-35 w-auto animate-pulse-gentle animate-float-gentle"
                             />
                         </div>
                         {adminMode.isAdminMode && (
@@ -278,13 +281,24 @@ const SeatSelection = ({
                         </div>
                     </div>
                 </div>
-                <div className='flex flex-row justify-center  items-center mt-5 gap-30'>
-                    <h2 className="text-lg font-semibold text-center mb-3 text-gray-700">左侧</h2>
-                    <h2 className="text-lg font-semibold text-center mb-3 text-gray-700">右侧</h2>
+                <div className='flex flex-row justify-center items-center mt-8 gap-30 relative'>
+                    <div className="relative">
+                        <h2 className="text-lg font-semibold text-center mb-3 text-gray-700 px-6 py-2">
+                            左侧
+                        </h2>
+                        {/* 底部渐变边界 */}
+                    </div>
+                    <div className="relative">
+                        <h2 className="text-lg font-semibold text-center mb-3 text-gray-700 px-6 py-2">
+                            右侧
+                        </h2>
+                    </div>
                 </div>
                 {/* Scrollable Content Area */}
-                <div className="overflow-y-auto" style={{ height: 'calc(100vh - 10px)' }}>
-                    <div className="">
+                <div className="overflow-y-auto relative" style={{ height: 'calc(100vh - 10px)' }}>
+                    {/* 顶部渐变遮罩 */}
+                    <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-white via-white/50 to-transparent pointer-events-none z-10"></div>
+                    <div className="pt-4">
                         <div className="max-w-md mx-auto">
                             {/* Brick-style staggered layout - two columns with offset */}
                             <div className="flex gap-2">

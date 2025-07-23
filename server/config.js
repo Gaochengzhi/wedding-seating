@@ -9,6 +9,10 @@ export const config = {
     // Phone Validation
     PHONE_NUMBER_LENGTH: parseInt(process.env.PHONE_NUMBER_LENGTH) || 11,
     
+    // Invitation Code Configuration
+    ENABLE_INVITATION_CODE: process.env.ENABLE_INVITATION_CODE === 'true',
+    INVITATION_CODE: process.env.INVITATION_CODE || '123456',
+    
     // Server Configuration
     PORT: process.env.PORT || 3001
 }

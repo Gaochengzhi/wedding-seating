@@ -1,0 +1,10 @@
+value,label,category,order,timestamp
+groom_classmate,男方同学/同事,groom,1,2025-01-01T00:00:00.000Z
+bride_classmate,女方同学/同事,bride,2,2025-01-01T00:00:00.000Z
+groom_father_friends,男方爸爸亲友,groom_family,3,2025-01-01T00:00:00.000Z
+groom_mother_friends,男方妈妈亲友,groom_family,4,2025-01-01T00:00:00.000Z
+bride_father_friends,女方爸爸亲友,bride_family,5,2025-01-01T00:00:00.000Z
+bride_mother_friends,女方妈妈亲友,bride_family,6,2025-01-01T00:00:00.000Z
+groom_father_colleagues,男方爸爸同事,groom_family,7,2025-01-01T00:00:00.000Z
+bride_father_colleagues,女方爸爸同事,bride_family,8,2025-01-01T00:00:00.000Z
+other,其他,other,9,2025-01-01T00:00:00.000Z

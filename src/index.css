@@ -7,12 +7,15 @@
 
 /* Hide all scrollbars but keep functionality */
 * {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
 }
 
 *::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
+    /* Chrome, Safari, Opera */
 }
 
 /* Allow all touch interactions by default */
@@ -41,66 +44,126 @@ body {
 
 /* Custom animations for wedding invitation */
 @keyframes float-gentle {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    33% { transform: translateY(-3px) rotate(0.5deg); }
-    66% { transform: translateY(3px) rotate(-0.5deg); }
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    33% {
+        transform: translateY(-3px) rotate(0.5deg);
+    }
+
+    66% {
+        transform: translateY(3px) rotate(-0.5deg);
+    }
 }
 
 @keyframes float-gentle-reverse {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    33% { transform: translateY(3px) rotate(-0.5deg); }
-    66% { transform: translateY(-3px) rotate(0.5deg); }
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    33% {
+        transform: translateY(3px) rotate(-0.5deg);
+    }
+
+    66% {
+        transform: translateY(-3px) rotate(0.5deg);
+    }
 }
 
 @keyframes pulse-gentle {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 0.9; }
+
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 0.9;
+    }
 }
 
 @keyframes multi-axis-left {
-    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-    25% { transform: translateY(-8px) translateX(4px) rotate(1.2deg); }
-    50% { transform: translateY(6px) translateX(-3px) rotate(-0.8deg); }
-    75% { transform: translateY(10px) translateX(2px) rotate(0.5deg); }
+
+    0%,
+    100% {
+        transform: translateY(0px) translateX(0px) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-8px) translateX(4px) rotate(1.2deg);
+    }
+
+    50% {
+        transform: translateY(6px) translateX(-3px) rotate(-0.8deg);
+    }
+
+    75% {
+        transform: translateY(10px) translateX(2px) rotate(0.5deg);
+    }
 }
 
 @keyframes multi-axis-right {
-    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
-    25% { transform: translateY(6px) translateX(-4px) rotate(-1deg); }
-    50% { transform: translateY(-10px) translateX(5px) rotate(1.5deg); }
-    75% { transform: translateY(-4px) translateX(-2px) rotate(-0.3deg); }
+
+    0%,
+    100% {
+        transform: translateY(0px) translateX(0px) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(6px) translateX(-4px) rotate(-1deg);
+    }
+
+    50% {
+        transform: translateY(-10px) translateX(5px) rotate(1.5deg);
+    }
+
+    75% {
+        transform: translateY(-4px) translateX(-2px) rotate(-0.3deg);
+    }
 }
 
 /* Elegant page transition animations */
 @keyframes page-fade-in {
-    0% { 
-        opacity: 0; 
+    0% {
+        opacity: 0;
         transform: scale(0.98) translateY(8px);
         filter: blur(2px);
     }
-    100% { 
-        opacity: 1; 
+
+    100% {
+        opacity: 1;
         transform: scale(1) translateY(0);
         filter: blur(0);
     }
 }
 
 @keyframes page-fade-out {
-    0% { 
-        opacity: 1; 
+    0% {
+        opacity: 1;
         transform: scale(1) translateY(0);
         filter: blur(0);
     }
-    100% { 
-        opacity: 0; 
+
+    100% {
+        opacity: 0;
         transform: scale(1.02) translateY(-8px);
         filter: blur(4px);
     }
 }
 
 @keyframes shimmer-gradient {
-    0% { background-position: -200% center; }
-    100% { background-position: 200% center; }
+    0% {
+        background-position: -200% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
 }
 
 .animate-float-gentle {

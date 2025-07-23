@@ -38,7 +38,7 @@ const RoundTableCard = ({
         return (
             <div
                 key={seat.id}
-                className="absolute"
+                className="absolute hover:z-10 transition-all duration-300"
                 style={{
                     left: `${position.x - 24}px`, // Offset for seat width
                     top: `${position.y - 20}px`,  // Offset for seat height

@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "server": "node server/server.js",
+    "server:prod": "NODE_ENV=production node server/server.js",
     "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
     "build": "vite build",
+    "generate-templates": "node server/generate-templates.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },

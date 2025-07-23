@@ -63,55 +63,77 @@ const relationshipsHeaders = [
 
 // Initialize tables CSV file
 const initializeTablesFile = () => {
-    if (!fs.existsSync(tablesFilePath)) {
-        const csvWriter = createObjectCsvWriter({
-            path: tablesFilePath,
-            header: tablesHeaders
-        })
-        
-        // Create tables structure based on configuration
-        const tables = []
-        for (let i = 1; i <= config.TOTAL_TABLES; i++) {
-            const side = i <= config.TABLES_PER_SIDE ? 'left' : 'right'
-            const displayNumber = side === 'left' ? i : i - config.TABLES_PER_SIDE
-            
-            tables.push({
-                tableid: `table_${i}`,
-                displaynumber: displayNumber,
-                side: side,
-                notes: '',
-                timestamp: new Date().toISOString()
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    
+    if (isDevelopment) {
+        // In development, only create if it doesn't exist
+        if (!fs.existsSync(tablesFilePath)) {
+            const csvWriter = createObjectCsvWriter({
+                path: tablesFilePath,
+                header: tablesHeaders
             })
+            
+            // Create tables structure based on configuration
+            const tables = []
+            for (let i = 1; i <= config.TOTAL_TABLES; i++) {
+                const side = i <= config.TABLES_PER_SIDE ? 'left' : 'right'
+                const displayNumber = side === 'left' ? i : i - config.TABLES_PER_SIDE
+                
+                tables.push({
+                    tableid: `table_${i}`,
+                    displaynumber: displayNumber,
+                    side: side,
+                    notes: '',
+                    timestamp: new Date().toISOString()
+                })
+            }
+            
+            csvWriter.writeRecords(tables)
+            console.log('Initialized tables CSV file for development:', tablesFilePath)
         }
-        
-        csvWriter.writeRecords(tables)
-        console.log('Initialized tables CSV file:', tablesFilePath)
+    } else {
+        // Production: Don't initialize here, rely on template files copied during deployment
+        console.log('Production mode: tables.csv should be copied from templates during deployment')
+        if (!fs.existsSync(tablesFilePath)) {
+            console.log('Warning: tables.csv not found in production. Please ensure templates are copied correctly.')
+        }
     }
 }
 
 // Initialize relationships CSV file with default options
 const initializeRelationshipsFile = () => {
-    if (!fs.existsSync(relationshipsFilePath)) {
-        const csvWriter = createObjectCsvWriter({
-            path: relationshipsFilePath,
-            header: relationshipsHeaders
-        })
-        
-        // Default relationship options
-        const defaultRelationships = [
-            { value: 'groom_classmate', label: '男方同学/同事', category: 'groom', order: 1, timestamp: new Date().toISOString() },
-            { value: 'bride_classmate', label: '女方同学/同事', category: 'bride', order: 2, timestamp: new Date().toISOString() },
-            { value: 'groom_father_friends', label: '男方爸爸亲友', category: 'groom_family', order: 3, timestamp: new Date().toISOString() },
-            { value: 'groom_mother_friends', label: '男方妈妈亲友', category: 'groom_family', order: 4, timestamp: new Date().toISOString() },
-            { value: 'bride_father_friends', label: '女方爸爸亲友', category: 'bride_family', order: 5, timestamp: new Date().toISOString() },
-            { value: 'bride_mother_friends', label: '女方妈妈亲友', category: 'bride_family', order: 6, timestamp: new Date().toISOString() },
-            { value: 'groom_father_colleagues', label: '男方爸爸同事', category: 'groom_family', order: 7, timestamp: new Date().toISOString() },
-            { value: 'bride_father_colleagues', label: '女方爸爸同事', category: 'bride_family', order: 8, timestamp: new Date().toISOString() },
-            { value: 'other', label: '其他', category: 'other', order: 9, timestamp: new Date().toISOString() }
-        ]
-        
-        csvWriter.writeRecords(defaultRelationships)
-        console.log('Initialized relationships CSV file:', relationshipsFilePath)
+    const isDevelopment = process.env.NODE_ENV === 'development'
+    
+    if (isDevelopment) {
+        // In development, only create if it doesn't exist
+        if (!fs.existsSync(relationshipsFilePath)) {
+            const csvWriter = createObjectCsvWriter({
+                path: relationshipsFilePath,
+                header: relationshipsHeaders
+            })
+            
+            // Default relationship options
+            const defaultRelationships = [
+                { value: 'groom_classmate', label: '男方同学/同事', category: 'groom', order: 1, timestamp: new Date().toISOString() },
+                { value: 'bride_classmate', label: '女方同学/同事', category: 'bride', order: 2, timestamp: new Date().toISOString() },
+                { value: 'groom_father_friends', label: '男方爸爸亲友', category: 'groom_family', order: 3, timestamp: new Date().toISOString() },
+                { value: 'groom_mother_friends', label: '男方妈妈亲友', category: 'groom_family', order: 4, timestamp: new Date().toISOString() },
+                { value: 'bride_father_friends', label: '女方爸爸亲友', category: 'bride_family', order: 5, timestamp: new Date().toISOString() },
+                { value: 'bride_mother_friends', label: '女方妈妈亲友', category: 'bride_family', order: 6, timestamp: new Date().toISOString() },
+                { value: 'groom_father_colleagues', label: '男方爸爸同事', category: 'groom_family', order: 7, timestamp: new Date().toISOString() },
+                { value: 'bride_father_colleagues', label: '女方爸爸同事', category: 'bride_family', order: 8, timestamp: new Date().toISOString() },
+                { value: 'other', label: '其他', category: 'other', order: 9, timestamp: new Date().toISOString() }
+            ]
+            
+            csvWriter.writeRecords(defaultRelationships)
+            console.log('Initialized relationships CSV file for development:', relationshipsFilePath)
+        }
+    } else {
+        // Production: Don't initialize here, rely on template files copied during deployment
+        console.log('Production mode: relationships.csv should be copied from templates during deployment')
+        if (!fs.existsSync(relationshipsFilePath)) {
+            console.log('Warning: relationships.csv not found in production. Please ensure templates are copied correctly.')
+        }
     }
 }
 
@@ -224,8 +246,9 @@ const initializeCsvFile = async () => {
         header: csvHeaders
     })
     
-    // Check if we're in development mode (localhost)
-    const isDevelopment = process.env.NODE_ENV !== 'production'
+    // Check if we're in development mode - only if explicitly set to development
+    // In production, CSV files should be copied from templates during deployment
+    const isDevelopment = process.env.NODE_ENV === 'development'
     
     if (isDevelopment) {
         // Check if file doesn't exist OR is empty (only header)
@@ -271,10 +294,10 @@ const initializeCsvFile = async () => {
             console.log('CSV file already has guest data, skipping initialization')
         }
     } else {
-        // Production: create empty file if it doesn't exist
+        // Production: Don't initialize here, rely on template files copied during deployment
+        console.log('Production mode: CSV files should be copied from templates during deployment')
         if (!fs.existsSync(csvFilePath)) {
-            await csvWriter.writeRecords([])
-            console.log('Initialized empty CSV file for production:', csvFilePath)
+            console.log('Warning: guests.csv not found in production. Please ensure templates are copied correctly.')
         }
     }
 }
@@ -740,6 +763,47 @@ app.put('/api/relationships/reorder', async (req, res) => {
     } catch (error) {
         console.error('Error reordering relationships:', error)
         res.status(500).json({ success: false, error: error.message })
+    }
+})
+
+// Invitation code verification
+app.post('/api/auth/verify-invitation', (req, res) => {
+    try {
+        const { invitationCode } = req.body
+        
+        // 如果禁用邀请码验证，直接返回成功
+        if (!config.ENABLE_INVITATION_CODE) {
+            return res.json({ 
+                success: true, 
+                message: 'Invitation code verification disabled' 
+            })
+        }
+        
+        // 验证邀请码
+        if (!invitationCode) {
+            return res.status(400).json({ 
+                success: false, 
+                error: '邀请码不能为空' 
+            })
+        }
+        
+        if (invitationCode === config.INVITATION_CODE) {
+            res.json({ 
+                success: true, 
+                message: '邀请码验证成功' 
+            })
+        } else {
+            res.status(401).json({ 
+                success: false, 
+                error: '邀请码错误' 
+            })
+        }
+    } catch (error) {
+        console.error('Error verifying invitation code:', error)
+        res.status(500).json({ 
+            success: false, 
+            error: '服务器内部错误' 
+        })
     }
 })
 

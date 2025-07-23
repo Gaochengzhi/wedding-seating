@@ -16,7 +16,6 @@ import {
     ListItem,
     ListItemText,
     IconButton,
-    Chip,
     Card,
     CardContent,
     Divider
@@ -24,8 +23,7 @@ import {
 import {
     Add as AddIcon,
     Edit as EditIcon,
-    Delete as DeleteIcon,
-    DragHandle as DragIcon
+    Delete as DeleteIcon
 } from '@mui/icons-material'
 
 const RelationshipManager = ({
@@ -41,7 +39,8 @@ const RelationshipManager = ({
     const [formData, setFormData] = useState({
         value: '',
         label: '',
-        category: 'other'
+        category: 'other',
+        order: 1
     })
 
     const categoryOptions = [
@@ -82,7 +81,8 @@ const RelationshipManager = ({
         setFormData({
             value: relationship.value,
             label: relationship.label,
-            category: relationship.category || 'other'
+            category: relationship.category || 'other',
+            order: relationship.order || 1
         })
         setEditDialogOpen(true)
     }
@@ -96,7 +96,7 @@ const RelationshipManager = ({
         try {
             await onAddRelationship(formData.value, formData.label, formData.category)
             setAddDialogOpen(false)
-            setFormData({ value: '', label: '', category: 'other' })
+            setFormData({ value: '', label: '', category: 'other', order: 1 })
         } catch (error) {
             alert('添加失败: ' + error.message)
         }
@@ -113,11 +113,11 @@ const RelationshipManager = ({
                 editingRelationship.value,
                 formData.label,
                 formData.category,
-                editingRelationship.order
+                formData.order
             )
             setEditDialogOpen(false)
             setEditingRelationship(null)
-            setFormData({ value: '', label: '', category: 'other' })
+            setFormData({ value: '', label: '', category: 'other', order: 1 })
         } catch (error) {
             alert('更新失败: ' + error.message)
         }
@@ -187,22 +187,11 @@ const RelationshipManager = ({
                                             </Box>
                                         }
                                     >
-                                        <IconButton size="small" sx={{ cursor: 'move', mr: 1 }}>
-                                            <DragIcon fontSize="small" />
-                                        </IconButton>
                                         <ListItemText
                                             primary={
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                    <Typography variant="body2" fontWeight="medium">
-                                                        {relationship.label}
-                                                    </Typography>
-                                                    <Chip
-                                                        label={relationship.value}
-                                                        size="small"
-                                                        variant="outlined"
-                                                        color={getCategoryColor(category)}
-                                                    />
-                                                </Box>
+                                                <Typography variant="body2" fontWeight="medium">
+                                                    {relationship.label}
+                                                </Typography>
                                             }
                                             secondary={`排序: ${relationship.order}`}
                                         />

@@ -1,7 +1,21 @@
 // API client for backend communication
 
-// Force localhost for development since we're running locally
-const API_BASE_URL = 'http://localhost:3001/api'
+// Determine API base URL based on environment
+const getApiBaseUrl = () => {
+    // Check if we're on production server
+    const isProductionServer = window.location.hostname === import.meta.env.VITE_PRODUCTION_SERVER || 
+                               window.location.hostname === '74.48.115.131'
+    
+    if (isProductionServer) {
+        return import.meta.env.VITE_PRODUCTION_API_BASE_URL || 'http://74.48.115.131:3001/api'
+    } else {
+        return import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api'
+    }
+}
+
+const API_BASE_URL = getApiBaseUrl()
+
+console.log('API Base URL:', API_BASE_URL)
 
 class ApiClient {
     async get(endpoint) {
@@ -104,6 +118,11 @@ class ApiClient {
 
     async healthCheck() {
         return this.get('/health')
+    }
+
+    // Auth-specific methods
+    async verifyInvitationCode(invitationCode) {
+        return this.post('/auth/verify-invitation', { invitationCode })
     }
 
     // Table-specific methods

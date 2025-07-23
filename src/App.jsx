@@ -85,20 +85,35 @@ function App() {
     }
 
     const handleOpenSeatSelection = () => {
+        const enableInvitationCode = import.meta.env.VITE_ENABLE_INVITATION_CODE === 'true'
+        
+        // 如果禁用邀请码验证，直接进入选座页面
+        if (!enableInvitationCode) {
+            changeView('seatSelection')
+            return
+        }
+        
+        // 开发环境自动填充邀请码
         if (window.location.hostname === 'localhost') {
-            setInvitationCode('5201314')
+            setInvitationCode(import.meta.env.VITE_INVITATION_CODE || '123456')
             changeView('seatSelection')
         } else {
             setIsInvitationModalOpen(true)
         }
     }
 
-    const handleInvitationSubmit = () => {
-        if (invitationCode === import.meta.env.VITE_INVITATION_CODE) {
+    const handleInvitationSubmit = async () => {
+        try {
+            // 调用后端API验证邀请码
+            await apiClient.verifyInvitationCode(invitationCode)
+            
+            // 验证成功，进入选座页面
             setIsInvitationModalOpen(false)
             changeView('seatSelection')
-        } else {
-            notification.showNotification('邀请码错误', 'error')
+            notification.showNotification('验证成功', 'success')
+        } catch (error) {
+            // 验证失败，显示错误信息
+            notification.showNotification(error.message || '邀请码验证失败', 'error')
         }
     }
 

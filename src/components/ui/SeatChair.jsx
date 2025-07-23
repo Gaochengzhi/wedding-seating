@@ -14,29 +14,28 @@ const SeatChair = ({
 }) => {
     const isEmpty = !seat.occupied
     const gender = seat.guest?.gender || 'none'
-    
+
     // Light, low saturation colors
     const getSeatColor = () => {
         if (isEmpty) return '#f3f4f6' // Very light gray
         return gender === 'male' ? '#dbeafe' : '#fce7f3' // Very light blue/pink
     }
-    
+
     const getTextColor = () => {
         if (isEmpty) return '#6b7280' // Medium gray
         return '#374151' // Dark gray for better readability
     }
-    
+
     // Show masked name unless in admin mode
-    const displayName = isEmpty ? '可选' : 
+    const displayName = isEmpty ? '可选' :
         (isAdminMode ? seat.guest?.name : maskName(seat.guest?.name))
-    
+
     const isDragging = draggedFromSeat?.id === seat.id
 
     return (
         <div
-            className={`relative transform transition-all duration-200 hover:scale-105 ${
-                isAdminMode && seat.occupied ? 'cursor-move' : 'cursor-pointer'
-            }`}
+            className={`relative transform transition-all duration-300 hover:scale-150 ${isAdminMode && seat.occupied ? 'cursor-move' : 'cursor-pointer'
+                }`}
             onClick={() => onClick(seat)}
             draggable={isAdminMode && seat.occupied}
             onDragStart={(e) => {
@@ -92,7 +91,7 @@ const SeatChair = ({
                         left: '0px'
                     }}
                 >
-                    <span 
+                    <span
                         className="transform scale-90"
                         style={{
                             transform: `rotate(${textRotation}deg)`,

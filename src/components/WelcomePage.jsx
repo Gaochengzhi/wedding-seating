@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@mui/material'
 
+// Import image assets directly
+import leftFlowerSvg from '../assets/left_flower.svg'
+import rightFlowerSvg from '../assets/right_flower.svg'
+import weddingTitleSvg from '../assets/wedding_invitaion_titile_logo.svg'
+import coupleSvg from '../assets/couple.svg'
+import elegantHeartSvg from '../assets/elegant_heart.svg'
+
 const WelcomePage = ({ onOpenSeatSelection }) => {
     const [isLoaded, setIsLoaded] = useState(false)
 
@@ -23,7 +30,7 @@ const WelcomePage = ({ onOpenSeatSelection }) => {
                     : '-translate-x-10 translate-y-10 opacity-0 blur-sm'
                     }`}>
                     <img
-                        src={import.meta.env.VITE_LEFT_FLOWER_PATH || './src/assets/left_flower.svg'}
+                        src={leftFlowerSvg}
                         alt="Left Flower"
                         className={`w-auto h-[30vh] sm:h-[60vh] max-w-[50vw] object-contain animate-pulse-gentle ${isLoaded ? 'animate-multi-axis-left' : ''
                             }`}
@@ -36,7 +43,7 @@ const WelcomePage = ({ onOpenSeatSelection }) => {
                     : 'translate-x-10 -translate-y-10 opacity-0 blur-sm'
                     }`}>
                     <img
-                        src={import.meta.env.VITE_RIGHT_FLOWER_PATH || './src/assets/right_flower.svg'}
+                        src={rightFlowerSvg}
                         alt="Right Flower"
                         className={`w-auto h-[50vh] sm:h-[60vh] max-w-[50vw] object-contain animate-pulse-gentle ${isLoaded ? 'animate-multi-axis-right' : ''
                             }`}
@@ -56,7 +63,7 @@ const WelcomePage = ({ onOpenSeatSelection }) => {
                             : '-translate-y-8 opacity-0 scale-90 blur-sm'
                             }`}>
                             <img
-                                src={import.meta.env.VITE_WEDDING_INVITATION_TITLE_PATH || './src/assets/wedding_invitaion_titile_logo.svg'}
+                                src={weddingTitleSvg}
                                 alt="Wedding Invitation Title"
                                 className="w-1/2 h-auto mx-auto max-w-[200px] sm:max-w-[300px]"
                             />
@@ -69,7 +76,7 @@ const WelcomePage = ({ onOpenSeatSelection }) => {
                             }`}>
                             <div className="w-3/5 mx-auto relative">
                                 <img
-                                    src={import.meta.env.VITE_COUPLE_PATH || './src/assets/couple.svg'}
+                                    src={coupleSvg}
                                     alt="Couple Photo"
                                     className="w-full h-auto object-contain"
                                 />
@@ -90,7 +97,7 @@ const WelcomePage = ({ onOpenSeatSelection }) => {
                             </span>
                             <div className="w-18 h-18 flex items-center justify-center animate-pulse">
                                 <img
-                                    src="./src/assets/elegant_heart.svg"
+                                    src={elegantHeartSvg}
                                     alt="Elegant Heart"
                                     className="w-full h-full object-contain"
                                 />
