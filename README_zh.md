@@ -25,7 +25,7 @@
 
 | 欢迎页面                                   | 管理页面                                     |
 | :----------------------------------------- | :------------------------------------------- |
-| ![alt text](screenshoots/welcome_page.jpg) | ![alt text](screenshoots/pc_manage_page.jpg) |
+| <img src="screenshoots/welcome_page.jpg" alt="欢迎页面" height="300" style="object-fit: cover;"/> | <img src="screenshoots/pc_manage_page.jpg" alt="管理页面" height="300" style="object-fit: cover;"/> |
 
 ### 移动端
 

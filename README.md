@@ -1,5 +1,7 @@
 # Wedding Invitation & Seat Selection System
 
+[中文版本 / Chinese Version](README_zh.md)
+
 [![React](https://img.shields.io/badge/React-19-blue.svg)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-5.0-blueviolet)](https://vitejs.dev/)
 [![Material-UI](https://img.shields.io/badge/Material--UI-5-green.svg)](https://mui.com/)
@@ -33,13 +35,13 @@ Live Demo: http://gaochengzhi.com/wedding/
 
 | Welcome Page                               | Management Page                              |
 | :----------------------------------------- | :------------------------------------------- |
-| ![alt text](screenshoots/welcome_page.jpg) | ![alt text](screenshoots/pc_manage_page.jpg) |
+| <img src="screenshoots/welcome_page.jpg" alt="Welcome Page" height="300" style="object-fit: cover;"/> | <img src="screenshoots/pc_manage_page.jpg" alt="Management Page" height="300" style="object-fit: cover;"/> |
 
 ### Mobile Version
 
 | Welcome Page                                 | Guest Registration                           | Identity Verification                         | Management Page                             | Seat Selection                             | Table Notes                              |
 | :------------------------------------------- | :------------------------------------------- | :-------------------------------------------- | :------------------------------------------ | :----------------------------------------- | :--------------------------------------- |
-| ![alt text](screenshoots/mobile_welcome.jpg) | ![alt text](screenshoots/guest_register.jpg) | ![alt text](screenshoots/id_verification.jpg) | ![alt text](screenshoots/mobile_manage.jpg) | ![alt text](screenshoots/table_select.jpg) | ![alt text](screenshoots/table_note.jpg) |
+| <img src="screenshoots/mobile_welcome.jpg" alt="Mobile Welcome" height="300" style="object-fit: cover;"/> | <img src="screenshoots/guest_register.jpg" alt="Guest Registration" height="300" style="object-fit: cover;"/> | <img src="screenshoots/id_verification.jpg" alt="Identity Verification" height="300" style="object-fit: cover;"/> | <img src="screenshoots/mobile_manage.jpg" alt="Mobile Management" height="300" style="object-fit: cover;"/> | <img src="screenshoots/table_select.jpg" alt="Seat Selection" height="300" style="object-fit: cover;"/> | <img src="screenshoots/table_note.jpg" alt="Table Notes" height="300" style="object-fit: cover;"/> |
 
 ## 🛠️ Installation & Setup
 
